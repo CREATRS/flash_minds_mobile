@@ -32,12 +32,12 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Form(
         key: formKey,
         child: SingleChildScrollView(
           child: SizedBox(
-            height: Get.height - 48,
+            height: Get.height - 72,
             child: Column(
               children: [
                 const Spacer(flex: 4),
