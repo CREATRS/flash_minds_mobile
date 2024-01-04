@@ -7,13 +7,14 @@ import 'package:flash_minds/backend/services/app_state.dart';
 import 'package:flash_minds/backend/services/auth.dart';
 import 'package:flash_minds/screens/authentication/authentication.dart';
 import 'package:flash_minds/screens/home.dart';
-import 'package:flash_minds/screens/profile.dart';
+import 'package:flash_minds/screens/profile/profile.dart';
 import 'package:flash_minds/screens/select_word_pack.dart';
 import 'package:flash_minds/utils/constants.dart';
 
 Route<dynamic> router(RouteSettings settings) {
   late Widget screen;
   AuthService auth = Get.find<AuthService>();
+  bool hasOwnAppBar = false;
 
   switch (settings.name) {
     // case Routes.game:
@@ -31,6 +32,7 @@ Route<dynamic> router(RouteSettings settings) {
       break;
     case Routes.selectWordpack:
       screen = const SelectWordpack();
+      hasOwnAppBar = true;
       break;
     default:
       throw Exception('Invalid route: ${settings.name}');
@@ -39,7 +41,7 @@ Route<dynamic> router(RouteSettings settings) {
     builder: (_) => Obx(
       () => auth.isAuthenticated
           ? Scaffold(
-              appBar: AppBar(),
+              appBar: hasOwnAppBar ? null : AppBar(),
               body: screen,
               drawer: const _Drawer(),
             )

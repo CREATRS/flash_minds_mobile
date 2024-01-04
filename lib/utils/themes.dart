@@ -16,7 +16,7 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
   primaryColor: AppColors.red,
   secondaryHeaderColor: AppColors.lightRed,
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor: AppColors.purple,
+    backgroundColor: AppColors.red,
     foregroundColor: Colors.white,
   ),
   iconButtonTheme: IconButtonThemeData(style: _buttonStyle(dark: true)),
@@ -27,8 +27,8 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
     trackColor: MaterialStateProperty.all<Color>(Colors.black45),
   ),
   tabBarTheme: const TabBarTheme(
-    labelColor: AppColors.lightRed,
-    indicatorColor: AppColors.lightRed,
+    labelColor: AppColors.red,
+    indicatorColor: AppColors.red,
   ),
   textButtonTheme: TextButtonThemeData(style: _buttonStyle(dark: true)),
 );
@@ -37,7 +37,7 @@ ThemeData lightTheme = ThemeData(
   primaryColor: AppColors.lightRed,
   secondaryHeaderColor: AppColors.red,
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor: AppColors.lightPurple,
+    backgroundColor: AppColors.lightRed,
     foregroundColor: Colors.white,
   ),
   iconButtonTheme: IconButtonThemeData(style: _buttonStyle(dark: false)),
@@ -49,8 +49,8 @@ ThemeData lightTheme = ThemeData(
     trackOutlineColor: MaterialStateProperty.all<Color>(Colors.grey.shade500),
   ),
   tabBarTheme: const TabBarTheme(
-    labelColor: AppColors.red,
-    indicatorColor: AppColors.red,
+    labelColor: AppColors.lightRed,
+    indicatorColor: AppColors.lightRed,
   ),
   textButtonTheme: TextButtonThemeData(style: _buttonStyle(dark: false)),
 );

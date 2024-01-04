@@ -8,6 +8,7 @@ import 'package:flash_minds/backend/models/user.dart';
 import 'package:flash_minds/backend/models/wordpack.dart';
 import 'package:flash_minds/backend/services/api.dart';
 import 'package:flash_minds/backend/services/auth.dart';
+import 'package:flash_minds/screens/profile/creations_tab.dart';
 import 'package:flash_minds/utils/constants.dart';
 import 'package:flash_minds/widgets/components/app_icon.dart';
 import 'package:flash_minds/widgets/components/cached_or_asset_image.dart';
@@ -25,7 +26,7 @@ class Profile extends StatelessWidget {
         }
         Widget picture = user.avatar != null
             ? Image.network(user.avatar!, fit: BoxFit.fitWidth)
-            : const AppIcon(height: 200, padding: EdgeInsets.all(8));
+            : const AppIcon(height: 200);
         return DefaultTabController(
           length: 3,
           child: FutureBuilder(
@@ -43,7 +44,7 @@ class Profile extends StatelessWidget {
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        Container(color: Colors.black38),
+                        Container(color: Colors.black12),
                         picture,
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -53,9 +54,10 @@ class Profile extends StatelessWidget {
                               filter:
                                   ImageFilter.blur(sigmaX: 30.0, sigmaY: 30.0),
                               child: CircleAvatar(
-                                radius: 72,
-                                backgroundColor:
-                                    user.avatar == null ? Colors.white : null,
+                                radius: 100,
+                                backgroundColor: user.avatar == null
+                                    ? AppColors.lightRed.withOpacity(.5)
+                                    : null,
                                 child: ClipOval(child: picture),
                               ),
                             ),
@@ -82,16 +84,12 @@ class Profile extends StatelessWidget {
                                   ],
                                 ),
                                 const Column(
-                                  children: [
-                                    Text('10'),
-                                    Text('Creations'),
-                                  ],
+                                  children: [Text('10'), Text('Creations')],
                                 ),
                               ],
                               indicatorWeight: 3,
                               indicatorSize: TabBarIndicatorSize.tab,
                               labelStyle: TextStyles.pMedium,
-                              unselectedLabelColor: Colors.white,
                             ),
                           ],
                         ),
@@ -119,7 +117,7 @@ class Profile extends StatelessWidget {
                             );
                           },
                         ),
-                        const Text('My creations', style: TextStyles.h1),
+                        const CreationsTab(),
                       ],
                     ),
                   ),

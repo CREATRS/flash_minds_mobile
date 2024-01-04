@@ -26,13 +26,21 @@ class Word {
   final String? it;
   final String? pt;
 
-  String get(String lang) => {
-        'en': en,
-        'es': es,
-        'fr': fr,
-        'de': de,
-        'it': it,
-        'pt': pt,
-      }[lang]!
-          .toUpperCase();
+  String get(String? lang) {
+    Map<String, String?> json = {
+      'en': en,
+      'es': es,
+      'fr': fr,
+      'de': de,
+      'it': it,
+      'pt': pt,
+    };
+    String? response = json[lang];
+    response ??= json['en'];
+    if (response == null) {
+      String key = json.keys.firstWhere((k) => json[k] != null);
+      response = json[key];
+    }
+    return response!.toUpperCase();
+  }
 }
