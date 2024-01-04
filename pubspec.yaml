@@ -1,0 +1,41 @@
+name: flash_minds
+description: This interactive flashcard game, built with Flutter, is designed to make learning words from various categories an engaging and educational experience.
+publish_to: "none"
+
+version: 1.0.0+3
+
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+dependencies:
+  cached_network_image: ^3.3.0
+  confetti: ^0.7.0
+  cupertino_icons: ^1.0.2
+  dio: ^5.4.0
+  flutter:
+    sdk: flutter
+  get: ^4.6.6
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  # lottie: ^2.7.0
+  # purchases_flutter: ^6.5.1
+  rounded_loading_button: ^2.1.0
+  # sign_in_with_apple: ^5.0.0
+  url_launcher: ^6.2.2
+
+dev_dependencies:
+  flutter_lints: ^3.0.1
+  flutter_test:
+    sdk: flutter
+  import_sorter: ^4.6.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    # - assets/animations/
+    - assets/flags/
+    - assets/images/
+    - assets/wordpacks/
+
+import_sorter:
+  comments: false
+  emojis: true

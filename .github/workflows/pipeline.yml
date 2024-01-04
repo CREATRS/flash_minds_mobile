@@ -1,0 +1,43 @@
+name: Flutter CI
+
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    types:
+    - opened
+    - reopened
+    - synchronize
+
+permissions:
+      contents: read
+      packages: write  
+      security-events: write  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@v35
+
+    - uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+
+    - run: flutter pub get
+
+    - run: |
+          changed_files='${{ steps.changed-files.outputs.all_changed_files }}'
+          flutter analyze $changed_files
+          flutter pub run import_sorter:main $changed_files --exit-if-changed
+    
+    - run: flutter test

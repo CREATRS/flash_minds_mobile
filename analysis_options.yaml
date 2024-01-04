@@ -1,0 +1,40 @@
+include: package:flutter_lints/flutter.yaml
+linter:
+  rules:
+  # Error rules
+    - avoid_empty_else
+    - cancel_subscriptions
+    - close_sinks
+    - comment_references
+
+  # Style rules
+    - always_declare_return_types    
+    - avoid_catches_without_on_clauses
+    - avoid_catching_errors
+    - avoid_redundant_argument_values
+    - avoid_unused_constructor_parameters
+    - camel_case_types
+    - combinators_ordering
+    - curly_braces_in_flow_control_structures
+    - implementation_imports
+    - leading_newlines_in_multiline_strings
+    - library_names
+    - lines_longer_than_80_chars
+    - one_member_abstracts
+    - only_throw_errors
+    - package_api_docs
+    - prefer_single_quotes
+    - require_trailing_commas
+    - sized_box_for_whitespace
+    - slash_for_doc_comments
+    - sort_child_properties_last
+    - sort_constructors_first
+    - sort_unnamed_constructors_first
+    - unnecessary_brace_in_string_interps
+    - unnecessary_final
+
+  # Pub rules
+    - sort_pub_dependencies
+
+  # Ignore rules
+    # - ignore: todo
