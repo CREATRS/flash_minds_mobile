@@ -26,6 +26,10 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
     thumbColor: MaterialStateProperty.all<Color>(AppColors.red),
     trackColor: MaterialStateProperty.all<Color>(Colors.black45),
   ),
+  tabBarTheme: const TabBarTheme(
+    labelColor: AppColors.lightRed,
+    indicatorColor: AppColors.lightRed,
+  ),
   textButtonTheme: TextButtonThemeData(style: _buttonStyle(dark: true)),
 );
 
@@ -41,9 +45,12 @@ ThemeData lightTheme = ThemeData(
       const ProgressIndicatorThemeData(color: AppColors.lightRed),
   switchTheme: SwitchThemeData(
     thumbColor: MaterialStateProperty.all<Color>(AppColors.lightRed),
-    trackColor:
-        MaterialStateProperty.all<Color>(Colors.grey.shade500),
+    trackColor: MaterialStateProperty.all<Color>(Colors.grey.shade500),
     trackOutlineColor: MaterialStateProperty.all<Color>(Colors.grey.shade500),
+  ),
+  tabBarTheme: const TabBarTheme(
+    labelColor: AppColors.red,
+    indicatorColor: AppColors.red,
   ),
   textButtonTheme: TextButtonThemeData(style: _buttonStyle(dark: false)),
 );
