@@ -41,7 +41,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             const Spacer(),
             TextFormField(
               controller: emailController,
-              decoration: inputDecoration.copyWith(hintText: 'Email'),
+              decoration: const InputDecoration(label: Text('Email')),
               validator: emailValidator,
               onChanged: (value) {
                 if (value.length > 5 &&
