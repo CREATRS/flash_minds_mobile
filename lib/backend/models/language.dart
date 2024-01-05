@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart' show BoxFit, Image;
+
 class Language {
   const Language({
     required this.code,
@@ -8,6 +10,9 @@ class Language {
   final String code;
   final String name;
   final Map<String, List<String>> specialCharacters;
+
+  Image image({double width = 48, BoxFit? fit}) =>
+      Image.asset('assets/flags/$code.png', width: width, fit: fit);
 }
 
 class Languages {
@@ -90,7 +95,8 @@ class Languages {
     italian,
   ];
 
-  static Language get(String code) {
-    return values.firstWhere((element) => element.code == code);
+  static Language? get(String? code) {
+    if (code == null) return null;
+    return values.singleWhere((element) => element.code == code);
   }
 }

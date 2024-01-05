@@ -6,7 +6,6 @@ import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
 
 import 'package:flash_minds/backend/controllers/game_controller.dart';
-import 'package:flash_minds/backend/models/language.dart';
 import 'package:flash_minds/backend/models/user.dart';
 import 'package:flash_minds/backend/models/wordpack.dart';
 import 'package:flash_minds/backend/services/app_state.dart';
@@ -40,8 +39,8 @@ class _GameState extends State<Game> {
     user = auth.user.value!;
     controller = GameController(
       wordPack: widget.wordPack,
-      sourceLanguage: user.sourceLanguage!,
-      targetLanguage: Languages.get(user.targetLanguage!),
+      sourceLanguageCode: user.sourceLanguage!.code,
+      targetLanguage: user.targetLanguage!,
       preloadProgress: widget.progress,
     );
   }
@@ -92,7 +91,7 @@ class _GameState extends State<Game> {
               child: Text(widget.wordPack.name, overflow: TextOverflow.fade),
             ),
             const SizedBox(width: 8),
-            Image.asset('assets/flags/${user.targetLanguage}.png', width: 24),
+            user.targetLanguage!.image(width: 24),
           ],
         ),
         centerTitle: true,
@@ -326,9 +325,9 @@ class _GameState extends State<Game> {
                                   .forEach((_, value) => value.play());
                               if (controller.score > user.id) {
                                 auth.updateUser(
-                                  // TODO: Update user score
-                                  // bestScore: controller.score,
-                                );
+                                    // TODO: Update user score
+                                    // bestScore: controller.score,
+                                    );
                                 Get.snackbar(
                                   'New high score!',
                                   'You scored ${controller.score} points!',

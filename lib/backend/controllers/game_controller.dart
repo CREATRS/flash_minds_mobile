@@ -12,7 +12,7 @@ export 'package:flash_minds/backend/models/game_progress.dart';
 class GameController {
   GameController({
     required this.wordPack,
-    required this.sourceLanguage,
+    required this.sourceLanguageCode,
     required this.targetLanguage,
     this.preloadProgress,
   }) {
@@ -22,7 +22,7 @@ class GameController {
   }
 
   final WordPack wordPack;
-  final String sourceLanguage;
+  final String sourceLanguageCode;
   final Language targetLanguage;
   final GameProgress? preloadProgress;
 
@@ -85,7 +85,7 @@ class GameController {
     _win = null;
     Word word = availableWords[Random().nextInt(availableWords.length)];
     _currentWord = word.get(targetLanguage.code);
-    _currentWordSource = word.get(sourceLanguage);
+    _currentWordSource = word.get(sourceLanguageCode);
 
     _characters = 'QWERTYUIOPASDFGHJKLZXCVBNM'.split('');
     attempts.clear();
