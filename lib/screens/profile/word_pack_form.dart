@@ -13,6 +13,8 @@ import 'package:flash_minds/utils/constants.dart';
 import 'package:flash_minds/utils/validators.dart';
 import 'package:flash_minds/widgets/components/button.dart';
 
+List<String> _assets = ['animals', 'fruits', 'colors', 'countries', 'numbers'];
+
 class WordPackForm extends StatefulWidget {
   const WordPackForm({super.key, this.wordPack});
   final WordPack? wordPack;
@@ -22,10 +24,11 @@ class WordPackForm extends StatefulWidget {
 }
 
 class _WordPackFormState extends State<WordPackForm> {
-  bool addingWord = false;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   List<Language> selectedLanguages = [];
   List<Word> words = [];
+  PageController pageController =
+      PageController(viewportFraction: 1 / _assets.length);
   RoundedLoadingButtonController buttonController =
       RoundedLoadingButtonController();
   String errors = '';
@@ -33,6 +36,7 @@ class _WordPackFormState extends State<WordPackForm> {
       wordController = TextEditingController();
   FocusNode focusNode = FocusNode();
   Map wordPointer = {};
+  int page = 0;
 
   late bool isEdit;
 
@@ -62,7 +66,37 @@ class _WordPackFormState extends State<WordPackForm> {
                 isEdit ? 'Edit word pack' : 'Create a new word pack',
                 style: TextStyles.h2,
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 16),
+              SizedBox(
+                height: 50,
+                child: PageView(
+                  controller: pageController,
+                  onPageChanged: (index) {
+                    setState(() => page = index);
+                  },
+                  children: _assets.map(
+                    (a) {
+                      bool selected = page == _assets.indexOf(a);
+                      return AnimatedScale(
+                        scale: selected ? 1 : .6,
+                        duration: duration,
+                        child: InkWell(
+                          child: Image.asset(
+                            'assets/wordpacks/$a.png',
+                            color: selected ? null : Colors.black38,
+                            colorBlendMode: BlendMode.srcATop,
+                          ),
+                          onTap: () => pageController.animateToPage(
+                            _assets.indexOf(a),
+                            duration: duration,
+                            curve: curve,
+                          ),
+                        ),
+                      );
+                    },
+                  ).toList(),
+                ),
+              ),
               TextFormField(
                 controller: nameController,
                 initialValue: widget.wordPack?.name,
@@ -210,10 +244,11 @@ class _WordPackFormState extends State<WordPackForm> {
   }
 
   SizedBox _wordsList() {
+    Size size = MediaQuery.of(context).size;
     return SizedBox(
       height: min(
         60 + (words.length * 55).toDouble(),
-        MediaQuery.of(context).size.height * .35,
+        size.height * .35,
       ),
       child: ListView.builder(
         reverse: true,
@@ -263,7 +298,10 @@ class _WordPackFormState extends State<WordPackForm> {
                               Colors.black,
                         ),
                       ),
-                      width: 100,
+                      width: max(
+                        100,
+                        size.width / (selectedLanguages.length + .6),
+                      ),
                       margin: const EdgeInsets.only(right: 8),
                       child: wordPointer['word'] == pointer['word'] &&
                               wordPointer['lang'] == pointer['lang']
@@ -373,6 +411,8 @@ class _WordPackFormState extends State<WordPackForm> {
                 setState(() => words.remove(word));
               },
             ),
+            contentPadding: EdgeInsets.zero,
+            horizontalTitleGap: 0,
           );
         },
       ),

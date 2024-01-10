@@ -46,15 +46,13 @@ class Profile extends StatelessWidget {
                           Text(
                             user.name,
                             style: TextStyles.h3.copyWith(
-                              color:
-                                  Get.isDarkMode ? Colors.white : Colors.black,
+                              color: Theme.of(context).hintColor,
                             ),
                           ),
                           Text(
                             user.email,
                             style: TextStyles.pSmall.copyWith(
-                              color:
-                                  Get.isDarkMode ? Colors.white : Colors.black,
+                              color: Theme.of(context).hintColor,
                             ),
                           ),
                           const SizedBox(height: 8),
