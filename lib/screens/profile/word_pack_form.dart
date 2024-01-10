@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import 'package:get/get.dart';
+
 import 'package:flash_minds/backend/models/language.dart';
 import 'package:flash_minds/backend/models/object_response.dart';
 import 'package:flash_minds/backend/models/word.dart';
@@ -29,7 +31,7 @@ class _WordPackFormState extends State<WordPackForm> {
   String errors = '';
   TextEditingController nameController = TextEditingController(),
       wordController = TextEditingController();
-  FocusNode wordFocus = FocusNode();
+  FocusNode focusNode = FocusNode();
   Map wordPointer = {};
 
   late bool isEdit;
@@ -66,151 +68,14 @@ class _WordPackFormState extends State<WordPackForm> {
                 initialValue: widget.wordPack?.name,
                 decoration: const InputDecoration(labelText: 'Name'),
                 validator: (value) => requiredValidator(value),
+                onTapOutside: (event) => FocusScope.of(context).unfocus(),
               ),
               const SizedBox(height: 16),
               const Text('Languages', style: TextStyles.h3),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: Languages.values
-                    .map(
-                      (e) => InkWell(
-                        borderRadius: BorderRadius.circular(24),
-                        child: e.image(
-                          fit: BoxFit.cover,
-                          disabled: selectedLanguages.isNotEmpty &&
-                              !selectedLanguages.contains(e),
-                        ),
-                        onTap: () {
-                          setState(() {
-                            if (selectedLanguages.contains(e)) {
-                              selectedLanguages.remove(e);
-                            } else {
-                              List<String> codes = Languages.values
-                                  .map((l) => l.code)
-                                  .toList(growable: false);
-                              selectedLanguages.add(e);
-                              selectedLanguages.sort(
-                                (a, b) => codes
-                                    .indexOf(a.code)
-                                    .compareTo(codes.indexOf(b.code)),
-                              );
-                            }
-                          });
-                        },
-                      ),
-                    )
-                    .toList(),
-              ),
+              _languagesRow(),
               const SizedBox(height: 16),
               const Text('Words', style: TextStyles.h3),
-              SizedBox(
-                height: min(
-                  60 + (words.length * 71).toDouble(),
-                  MediaQuery.of(context).size.height * .35,
-                ),
-                child: ListView.builder(
-                  reverse: true,
-                  padding: EdgeInsets.zero,
-                  physics: const ClampingScrollPhysics(),
-                  itemCount: words.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return ListTile(
-                        enabled: selectedLanguages.length > 1,
-                        leading: const Icon(Icons.add),
-                        title: const Text('Add word'),
-                        onTap: () => setState(() => words.insert(0, Word())),
-                      );
-                    }
-                    Word word = words[index - 1];
-                    return ListTile(
-                      title: SizedBox(
-                        height: 40,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: selectedLanguages.map(
-                            (l) {
-                              String? value = word.getOrNull(l.code);
-                              Map<String, int> pointer = {
-                                'word': words.indexOf(word),
-                                'lang': selectedLanguages.indexOf(l),
-                              };
-                              return Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: l.image().image,
-                                    opacity: .2,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    width: .5,
-                                    color: Theme.of(context)
-                                            .inputDecorationTheme
-                                            .enabledBorder
-                                            ?.borderSide
-                                            .color ??
-                                        Colors.black,
-                                  ),
-                                ),
-                                width: 100,
-                                margin: const EdgeInsets.only(right: 8),
-                                child: wordPointer['word'] == pointer['word'] &&
-                                        wordPointer['lang'] == pointer['lang']
-                                    ? TextField(
-                                        decoration: const InputDecoration(
-                                          contentPadding: EdgeInsets.symmetric(
-                                            horizontal: 4,
-                                          ),
-                                        ),
-                                        focusNode: wordFocus,
-                                        controller: wordController,
-                                        onTapOutside: (event) {
-                                          if (wordController.text.isNotEmpty) {
-                                            word.set(
-                                              l.code,
-                                              wordController.text,
-                                            );
-                                            wordController.clear();
-                                          }
-                                          setState(() => wordPointer = {});
-                                        },
-                                      )
-                                    : InkWell(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                value ?? '',
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        onTap: () {
-                                          wordFocus.requestFocus();
-                                          wordController.text = value ?? '';
-                                          setState(
-                                            () => wordPointer = pointer,
-                                          );
-                                        },
-                                      ),
-                              );
-                            },
-                          ).toList(),
-                        ),
-                      ),
-                      trailing: IconButton(
-                        visualDensity: VisualDensity.compact,
-                        icon: const Icon(Icons.delete),
-                        onPressed: () => setState(() => words.remove(word)),
-                      ),
-                    );
-                  },
-                ),
-              ),
+              _wordsList(),
               Text('${words.length} words'),
               Text(
                 errors,
@@ -229,6 +94,26 @@ class _WordPackFormState extends State<WordPackForm> {
                     }
                     if (words.isEmpty) {
                       setState(() => errors = 'Add at least 1 word');
+                      return;
+                    }
+                    Word? word = words
+                        .where(
+                          (w) => !w.hasLanguages(
+                            selectedLanguages.map((l) => l.code).toList(),
+                          ),
+                        )
+                        .lastOrNull;
+                    if (word != null) {
+                      wordPointer = {
+                        'word': words.indexOf(word),
+                        'lang': selectedLanguages.indexOf(
+                          selectedLanguages.firstWhere(
+                            (l) => !word.hasLanguages([l.code]),
+                          ),
+                        ),
+                      };
+                      focusNode.requestFocus();
+                      setState(() => errors = 'Fill all the words');
                       return;
                     }
                     late ObjectResponse response;
@@ -261,6 +146,235 @@ class _WordPackFormState extends State<WordPackForm> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Row _languagesRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: Languages.values
+          .map(
+            (e) => InkWell(
+              borderRadius: BorderRadius.circular(24),
+              child: e.image(
+                fit: BoxFit.cover,
+                disabled: selectedLanguages.isNotEmpty &&
+                    !selectedLanguages.contains(e),
+              ),
+              onTap: () async {
+                if (selectedLanguages.contains(e)) {
+                  if (selectedLanguages.length < 3) return;
+                  if (words.any((w) => w.getOrNull(e.code) != null)) {
+                    bool? sure = await Get.dialog(
+                      AlertDialog(
+                        title: const Text('Are you sure?'),
+                        content: const Text(
+                          "The translations you've added will be lost",
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, true),
+                            child: const Text('Delete'),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (!(sure ?? false)) return;
+                  }
+
+                  selectedLanguages.remove(e);
+                  for (Word w in words) {
+                    w.remove(e.code);
+                  }
+                } else {
+                  List<String> codes = Languages.values
+                      .map((l) => l.code)
+                      .toList(growable: false);
+                  selectedLanguages.add(e);
+                  selectedLanguages.sort(
+                    (a, b) =>
+                        codes.indexOf(a.code).compareTo(codes.indexOf(b.code)),
+                  );
+                }
+                setState(() {});
+              },
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  SizedBox _wordsList() {
+    return SizedBox(
+      height: min(
+        60 + (words.length * 55).toDouble(),
+        MediaQuery.of(context).size.height * .35,
+      ),
+      child: ListView.builder(
+        reverse: true,
+        padding: EdgeInsets.zero,
+        physics: const ClampingScrollPhysics(),
+        itemCount: words.length + 1,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return ListTile(
+              enabled: selectedLanguages.length > 1,
+              leading: const Icon(Icons.add),
+              title: const Text('Add word'),
+              onTap: () {
+                if (words.any((w) => w.toJson().keys.isEmpty)) return;
+                setState(() => words.insert(0, Word()));
+              },
+            );
+          }
+          Word word = words[index - 1];
+          return ListTile(
+            title: SizedBox(
+              height: 40,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: selectedLanguages.map(
+                  (l) {
+                    String? value = word.getOrNull(l.code);
+                    Map<String, int> pointer = {
+                      'word': words.indexOf(word),
+                      'lang': selectedLanguages.indexOf(l),
+                    };
+                    return Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: l.image().image,
+                          opacity: .2,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          width: .5,
+                          color: Theme.of(context)
+                                  .inputDecorationTheme
+                                  .enabledBorder
+                                  ?.borderSide
+                                  .color ??
+                              Colors.black,
+                        ),
+                      ),
+                      width: 100,
+                      margin: const EdgeInsets.only(right: 8),
+                      child: wordPointer['word'] == pointer['word'] &&
+                              wordPointer['lang'] == pointer['lang']
+                          ? TextField(
+                              controller: wordController,
+                              focusNode: focusNode,
+                              decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                ),
+                              ),
+                              textInputAction: TextInputAction.next,
+                              onSubmitted: (value) {
+                                if (wordController.text.isNotEmpty) {
+                                  word.set(
+                                    l.code,
+                                    wordController.text,
+                                  );
+                                  wordController.clear();
+                                }
+                                Word? nextValue = words
+                                    .where(
+                                      (w) => !w.hasLanguages(
+                                        selectedLanguages
+                                            .map((l) => l.code)
+                                            .toList(),
+                                      ),
+                                    )
+                                    .lastOrNull;
+                                if (nextValue == null) {
+                                  setState(() {
+                                    wordPointer = {};
+                                  });
+                                } else {
+                                  wordPointer = {
+                                    'word': words.indexOf(nextValue),
+                                    'lang': selectedLanguages.indexOf(
+                                      selectedLanguages.firstWhere(
+                                        (l) =>
+                                            !nextValue.hasLanguages([l.code]),
+                                      ),
+                                    ),
+                                  };
+                                }
+                                setState(() => errors = '');
+                              },
+                              onTapOutside: (event) {
+                                if (wordController.text.isNotEmpty) {
+                                  word.set(
+                                    l.code,
+                                    wordController.text,
+                                  );
+                                  wordController.clear();
+                                }
+                                errors = '';
+                                setState(() => wordPointer = {});
+                              },
+                            )
+                          : InkWell(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      value ?? '',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              onTap: () {
+                                focusNode.requestFocus();
+                                wordController.text = value ?? '';
+                                setState(() => wordPointer = pointer);
+                              },
+                            ),
+                    );
+                  },
+                ).toList(),
+              ),
+            ),
+            trailing: IconButton(
+              visualDensity: VisualDensity.compact,
+              icon: const Icon(Icons.delete),
+              onPressed: () async {
+                if (word.toJson().values.isNotEmpty) {
+                  bool? sure = await Get.dialog(
+                    AlertDialog(
+                      title: const Text('Are you sure?'),
+                      content: const Text(
+                        "The translations you've added will be lost",
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text('Delete'),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (!(sure ?? false)) return;
+                }
+                setState(() => words.remove(word));
+              },
+            ),
+          );
+        },
       ),
     );
   }

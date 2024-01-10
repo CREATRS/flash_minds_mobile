@@ -50,6 +50,32 @@ class Word {
         'pt': pt,
       }[lang];
 
+  bool hasLanguages(List<String> languages) =>
+      languages.every((lang) => getOrNull(lang) != null);
+
+  void remove(String lang) {
+    switch (lang) {
+      case 'en':
+        en = null;
+        break;
+      case 'es':
+        es = null;
+        break;
+      case 'fr':
+        fr = null;
+        break;
+      case 'de':
+        de = null;
+        break;
+      case 'it':
+        it = null;
+        break;
+      case 'pt':
+        pt = null;
+        break;
+    }
+  }
+
   void set(String lang, String value) {
     switch (lang) {
       case 'en':
@@ -71,5 +97,18 @@ class Word {
         pt = value;
         break;
     }
+  }
+
+  Map<String, String> toJson() {
+    Map<String, String?> json = {
+      'en': en,
+      'es': es,
+      'fr': fr,
+      'de': de,
+      'it': it,
+      'pt': pt,
+    };
+    json.removeWhere((key, value) => value == null);
+    return json.map((key, value) => MapEntry(key, value!));
   }
 }
