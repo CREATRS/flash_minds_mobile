@@ -39,4 +39,5 @@ class TextStyles {
   static const h3 = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
   static const h4 = TextStyle(fontSize: 14, fontWeight: FontWeight.bold);
   static const pMedium = TextStyle(fontSize: 14);
+  static const pSmall = TextStyle(fontSize: 12);
 }

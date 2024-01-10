@@ -14,6 +14,7 @@ class Button extends StatelessWidget {
     this.controller,
     this.color,
     this.width = 300,
+    this.resetAfterDuration = false,
     required this.onPressed,
   });
 
@@ -21,6 +22,7 @@ class Button extends StatelessWidget {
   final RoundedLoadingButtonController? controller;
   final Color? color;
   final double width;
+  final bool resetAfterDuration;
   final VoidCallback? onPressed;
 
   @override
@@ -34,6 +36,8 @@ class Button extends StatelessWidget {
       animateOnTap: controller == null,
       elevation: 7,
       successColor: color,
+      resetDuration: const Duration(seconds: 2),
+      resetAfterDuration: resetAfterDuration,
       child: Text(text, style: TextStyles.h3.copyWith(color: Colors.white)),
     );
   }

@@ -29,6 +29,7 @@ Route<dynamic> router(RouteSettings settings) {
       break;
     case Routes.profile:
       screen = const Profile();
+      hasOwnAppBar = true;
       break;
     case Routes.selectWordpack:
       screen = const SelectWordpack();

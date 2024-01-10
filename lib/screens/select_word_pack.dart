@@ -79,9 +79,7 @@ class _SelectWordpackState extends State<SelectWordpack> {
                   scrollDirection: Axis.horizontal,
                   reverse: true,
                   children: wordPack.languages
-                      .map(
-                        (e) => Image.asset('assets/flags/$e.png', width: 24),
-                      )
+                      .map((e) => Image.asset('assets/flags/$e.png', width: 24))
                       .toList()
                       .reversed
                       .toList(),

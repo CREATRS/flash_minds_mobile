@@ -13,6 +13,8 @@ ButtonStyle _buttonStyle({required bool dark}) {
   );
 }
 
+const BorderRadius _circular = BorderRadius.all(Radius.circular(8));
+
 ThemeData darkTheme = ThemeData.dark().copyWith(
   cupertinoOverrideTheme: const CupertinoThemeData(primaryColor: AppColors.red),
   inputDecorationTheme: const InputDecorationTheme(
@@ -21,17 +23,19 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
     contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
     prefixIconColor: AppColors.grey,
     suffixIconColor: AppColors.grey,
-    errorBorder:
-        OutlineInputBorder(borderSide: BorderSide(color: AppColors.red)),
+    errorBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: AppColors.red),
+      borderRadius: _circular,
+    ),
     focusedBorder: OutlineInputBorder(
       borderSide: BorderSide(color: Colors.white),
+      borderRadius: _circular,
     ),
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(color: AppColors.grey),
+      borderRadius: _circular,
     ),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(8)),
-    ),
+    border: OutlineInputBorder(borderRadius: _circular),
   ),
   primaryColor: AppColors.red,
   secondaryHeaderColor: AppColors.lightRed,
@@ -67,15 +71,18 @@ ThemeData lightTheme = ThemeData(
     contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
     prefixIconColor: AppColors.grey,
     suffixIconColor: AppColors.grey,
-    errorBorder:
-        OutlineInputBorder(borderSide: BorderSide(color: AppColors.lightRed)),
-    focusedBorder: OutlineInputBorder(),
-    enabledBorder:
-        OutlineInputBorder(borderSide: BorderSide(color: AppColors.grey)),
-    border:
-        OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
+    errorBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: AppColors.lightRed),
+      borderRadius: _circular,
+    ),
+    focusedBorder: OutlineInputBorder(borderRadius: _circular),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: AppColors.grey),
+      borderRadius: _circular,
+    ),
+    border: OutlineInputBorder(borderRadius: _circular),
   ),
-  primaryColor: AppColors.lightRed,
+  primaryColor: AppColors.lightRed, 
   secondaryHeaderColor: AppColors.red,
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: AppColors.lightRed,

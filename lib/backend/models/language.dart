@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show BoxFit, Image;
+import 'package:flutter/material.dart' show BlendMode, BoxFit, Colors, Image;
 
 class Language {
   const Language({
@@ -11,8 +11,14 @@ class Language {
   final String name;
   final Map<String, List<String>> specialCharacters;
 
-  Image image({double width = 48, BoxFit? fit}) =>
-      Image.asset('assets/flags/$code.png', width: width, fit: fit);
+  Image image({double width = 48, BoxFit? fit, bool disabled = false}) =>
+      Image.asset(
+        'assets/flags/$code.png',
+        width: width,
+        fit: fit,
+        color: disabled ? Colors.black54 : null,
+        colorBlendMode: BlendMode.srcATop,
+      );
 }
 
 class Languages {
