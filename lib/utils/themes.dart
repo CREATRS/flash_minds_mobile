@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
@@ -12,11 +13,34 @@ ButtonStyle _buttonStyle({required bool dark}) {
   );
 }
 
+const BorderRadius _circular = BorderRadius.all(Radius.circular(8));
+
 ThemeData darkTheme = ThemeData.dark().copyWith(
+  cupertinoOverrideTheme: const CupertinoThemeData(primaryColor: AppColors.red),
+  inputDecorationTheme: const InputDecorationTheme(
+    labelStyle: TextStyle(color: Colors.white),
+    errorStyle: TextStyle(color: AppColors.red),
+    contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+    prefixIconColor: AppColors.grey,
+    suffixIconColor: AppColors.grey,
+    errorBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: AppColors.red),
+      borderRadius: _circular,
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.white),
+      borderRadius: _circular,
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: AppColors.grey),
+      borderRadius: _circular,
+    ),
+    border: OutlineInputBorder(borderRadius: _circular),
+  ),
   primaryColor: AppColors.red,
   secondaryHeaderColor: AppColors.lightRed,
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor: AppColors.purple,
+    backgroundColor: AppColors.red,
     foregroundColor: Colors.white,
   ),
   iconButtonTheme: IconButtonThemeData(style: _buttonStyle(dark: true)),
@@ -26,14 +50,42 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
     thumbColor: MaterialStateProperty.all<Color>(AppColors.red),
     trackColor: MaterialStateProperty.all<Color>(Colors.black45),
   ),
+  tabBarTheme: const TabBarTheme(
+    labelColor: AppColors.red,
+    indicatorColor: AppColors.red,
+  ),
   textButtonTheme: TextButtonThemeData(style: _buttonStyle(dark: true)),
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor: AppColors.red,
+    selectionColor: AppColors.red.withOpacity(.5),
+    selectionHandleColor: AppColors.red,
+  ),
 );
 
 ThemeData lightTheme = ThemeData(
-  primaryColor: AppColors.lightRed,
+  cupertinoOverrideTheme:
+      const CupertinoThemeData(primaryColor: AppColors.lightRed),
+  inputDecorationTheme: const InputDecorationTheme(
+    labelStyle: TextStyle(color: Colors.black),
+    errorStyle: TextStyle(color: AppColors.lightRed),
+    contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+    prefixIconColor: AppColors.grey,
+    suffixIconColor: AppColors.grey,
+    errorBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: AppColors.lightRed),
+      borderRadius: _circular,
+    ),
+    focusedBorder: OutlineInputBorder(borderRadius: _circular),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: AppColors.grey),
+      borderRadius: _circular,
+    ),
+    border: OutlineInputBorder(borderRadius: _circular),
+  ),
+  primaryColor: AppColors.lightRed, 
   secondaryHeaderColor: AppColors.red,
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor: AppColors.lightPurple,
+    backgroundColor: AppColors.lightRed,
     foregroundColor: Colors.white,
   ),
   iconButtonTheme: IconButtonThemeData(style: _buttonStyle(dark: false)),
@@ -41,9 +93,17 @@ ThemeData lightTheme = ThemeData(
       const ProgressIndicatorThemeData(color: AppColors.lightRed),
   switchTheme: SwitchThemeData(
     thumbColor: MaterialStateProperty.all<Color>(AppColors.lightRed),
-    trackColor:
-        MaterialStateProperty.all<Color>(Colors.grey.shade500),
-    trackOutlineColor: MaterialStateProperty.all<Color>(Colors.grey.shade500),
+    trackColor: MaterialStateProperty.all<Color>(AppColors.grey),
+    trackOutlineColor: MaterialStateProperty.all<Color>(AppColors.grey),
+  ),
+  tabBarTheme: const TabBarTheme(
+    labelColor: AppColors.lightRed,
+    indicatorColor: AppColors.lightRed,
   ),
   textButtonTheme: TextButtonThemeData(style: _buttonStyle(dark: false)),
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor: AppColors.lightRed,
+    selectionColor: AppColors.lightRed.withOpacity(.5),
+    selectionHandleColor: AppColors.lightRed,
+  ),
 );

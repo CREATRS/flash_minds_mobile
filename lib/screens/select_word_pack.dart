@@ -6,7 +6,6 @@ import 'package:flash_minds/backend/models/game_progress.dart';
 import 'package:flash_minds/backend/models/wordpack.dart';
 import 'package:flash_minds/backend/services/api.dart';
 import 'package:flash_minds/backend/services/app_state.dart';
-import 'package:flash_minds/utils/constants.dart';
 import 'package:flash_minds/widgets/components/button.dart';
 import 'package:flash_minds/widgets/components/cached_or_asset_image.dart';
 import 'package:flash_minds/widgets/components/selectable_item.dart';
@@ -34,7 +33,6 @@ class _SelectWordpackState extends State<SelectWordpack> {
       key: _key,
       appBar: _appBar,
       body: _body,
-      floatingActionButton: _floatingActionButton,
       endDrawer: _filterDrawer,
       bottomNavigationBar:
           selectedWordpack != null ? _bottomNavigationBar : null,
@@ -79,9 +77,7 @@ class _SelectWordpackState extends State<SelectWordpack> {
                   scrollDirection: Axis.horizontal,
                   reverse: true,
                   children: wordPack.languages
-                      .map(
-                        (e) => Image.asset('assets/flags/$e.png', width: 24),
-                      )
+                      .map((e) => Image.asset('assets/flags/$e.png', width: 24))
                       .toList()
                       .reversed
                       .toList(),
@@ -107,13 +103,6 @@ class _SelectWordpackState extends State<SelectWordpack> {
           },
         );
       },
-    );
-  }
-
-  Widget get _floatingActionButton {
-    return FloatingActionButton(
-      onPressed: () => Navigator.pushNamed(context, Routes.createWordpack),
-      child: const Icon(Icons.add),
     );
   }
 

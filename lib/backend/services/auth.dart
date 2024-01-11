@@ -99,9 +99,9 @@ class AuthService extends GetxController {
       'target_language': targetLanguage,
     };
     data.removeWhere((_, value) => value == null);
-    var updatedUser =
-        await dio.patch('accounts/${user.value!.id}/', data: data);
-    user.value = User.fromJson(updatedUser.data);
+    var updatedUser = await dio.patch('account/${user.value!.id}/', data: data);
+    user.value =
+        User.fromJson({...updatedUser.data, 'token': user.value!.token});
     await _saveUser();
     update();
   }

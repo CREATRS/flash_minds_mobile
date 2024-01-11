@@ -17,19 +17,19 @@ class WordPack {
       name: json['name'],
       words: List<Word>.from(
         json['words'].map(
-          (w) {
+          (word) {
+            List<String> keys = List<String>.from(word.keys);
             if (languages == null) {
-              languages = w.keys.toList();
+              languages = keys;
             } else {
-              List<String> keys = w.keys.toList();
               languages = languages!..removeWhere((l) => !keys.contains(l));
             }
-            return Word.fromJson(w);
+            return Word.fromJson(word);
           },
         ),
       ),
       rating: json['rating'].toDouble(),
-      image: json['image'],
+      image: json['asset'],
       languages: languages!,
     );
   }

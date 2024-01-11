@@ -30,7 +30,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Form(
         key: formKey,
         child: Column(
@@ -41,7 +41,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             const Spacer(),
             TextFormField(
               controller: emailController,
-              decoration: inputDecoration.copyWith(hintText: 'Email'),
+              decoration: const InputDecoration(label: Text('Email')),
               validator: emailValidator,
               onChanged: (value) {
                 if (value.length > 5 &&

@@ -27,11 +27,12 @@ class _LoginState extends State<Login> {
           TextEditingController(text: 'user@example.com'),
       passwordController = TextEditingController(text: 'password123');
   String error = '';
+  bool showPassword = false;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Form(
         key: formKey,
         child: Column(
@@ -42,7 +43,10 @@ class _LoginState extends State<Login> {
             const Spacer(flex: 2),
             TextFormField(
               controller: emailController,
-              decoration: inputDecoration.copyWith(hintText: 'Email'),
+              decoration: const InputDecoration(
+                label: Text('Email'),
+                prefixIcon: Icon(Icons.email),
+              ),
               validator: emailValidator,
               onChanged: (value) {
                 if (value.length > 5 &&
@@ -54,8 +58,17 @@ class _LoginState extends State<Login> {
             const Spacer(),
             TextFormField(
               controller: passwordController,
-              decoration: inputDecoration.copyWith(hintText: 'Password'),
-              obscureText: true,
+              decoration: InputDecoration(
+                label: const Text('Password'),
+                prefixIcon: const Icon(Icons.password),
+                suffixIcon: IconButton(
+                  onPressed: () => setState(() => showPassword = !showPassword),
+                  icon: Icon(
+                    showPassword ? Icons.visibility_off : Icons.visibility,
+                  ),
+                ),
+              ),
+              obscureText: !showPassword,
               onChanged: (value) {
                 if (value.length > 5 &&
                     buttonController.currentState == ButtonState.error) {

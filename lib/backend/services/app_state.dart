@@ -7,7 +7,7 @@ class AppStateService extends GetxController {
   // Init state
   Future<void> init() async {
     await _loadStorage();
-    setDarkMode(box.get(StorageKeys.darkMode));
+    await setDarkMode(box.get(StorageKeys.darkMode));
   }
 
   // Values

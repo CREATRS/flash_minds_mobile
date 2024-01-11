@@ -17,3 +17,10 @@ String? lenghtValidator(String? value, int length) {
   }
   return null;
 }
+
+String? requiredValidator(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'This field is required';
+  }
+  return null;
+}

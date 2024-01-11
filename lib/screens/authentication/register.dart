@@ -32,12 +32,12 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Form(
         key: formKey,
         child: SingleChildScrollView(
           child: SizedBox(
-            height: Get.height - 48,
+            height: Get.height - 72,
             child: Column(
               children: [
                 const Spacer(flex: 4),
@@ -45,13 +45,13 @@ class _RegisterState extends State<Register> {
                 const Spacer(),
                 TextFormField(
                   controller: nameController,
-                  decoration: inputDecoration.copyWith(hintText: 'Name'),
+                  decoration: const InputDecoration(label: Text('Name')),
                   validator: (value) => lenghtValidator(value, 3),
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: emailController,
-                  decoration: inputDecoration.copyWith(hintText: 'Email'),
+                  decoration: const InputDecoration(label: Text('Email')),
                   validator: emailValidator,
                   onChanged: (value) {
                     if (value.length > 5 &&
@@ -63,7 +63,7 @@ class _RegisterState extends State<Register> {
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: passwordController,
-                  decoration: inputDecoration.copyWith(hintText: 'Password'),
+                  decoration: const InputDecoration(label: Text('Password')),
                   validator: (value) => lenghtValidator(value, 6),
                   obscureText: true,
                   onChanged: (value) {
@@ -77,7 +77,7 @@ class _RegisterState extends State<Register> {
                 TextFormField(
                   controller: confirmPasswordController,
                   decoration:
-                      inputDecoration.copyWith(hintText: 'Confirm Password'),
+                      const InputDecoration(label: Text('Confirm Password')),
                   validator: (value) {
                     if (value != passwordController.text) {
                       return "Passwords don't match";
