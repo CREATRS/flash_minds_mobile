@@ -7,10 +7,10 @@ class StaticData {
 
 List<Map<String, dynamic>> _wordPacks = [
   {
-    'id': 1,
+    'id': -1,
     'name': 'Animals',
     'rating': 3.8,
-    'image': 'assets/wordpacks/animals.png',
+    'asset': 'assets/wordpacks/animals.png',
     'words': [
       {'es': 'león', 'fr': 'lion', 'de': 'löwe', 'it': 'leone', 'pt': 'leão'},
       {
@@ -224,10 +224,10 @@ List<Map<String, dynamic>> _wordPacks = [
     ],
   },
   {
-    'id': 2,
+    'id': -2,
     'name': 'Colors',
     'rating': 3.4,
-    'image': 'assets/wordpacks/colors.png',
+    'asset': 'assets/wordpacks/colors.png',
     'words': [
       {'en': 'red', 'es': 'rojo', 'fr': 'rouge', 'de': 'rot', 'it': 'rosso'},
       {'en': 'blue', 'es': 'azul', 'fr': 'bleu', 'de': 'blau', 'it': 'blu'},
@@ -307,10 +307,10 @@ List<Map<String, dynamic>> _wordPacks = [
     ],
   },
   {
-    'id': 3,
+    'id': -3,
     'name': 'Fruits',
     'rating': 4.8,
-    'image': 'assets/wordpacks/fruits.png',
+    'asset': 'assets/wordpacks/fruits.png',
     'words': [
       {
         'en': 'apple',
@@ -401,10 +401,10 @@ List<Map<String, dynamic>> _wordPacks = [
     ],
   },
   {
-    'id': 4,
+    'id': -4,
     'name': 'Numbers',
     'rating': 4.0,
-    'image': 'assets/wordpacks/numbers.png',
+    'asset': 'assets/wordpacks/numbers.png',
     'words': [
       {
         'en': 'one',
@@ -489,10 +489,10 @@ List<Map<String, dynamic>> _wordPacks = [
     ],
   },
   {
-    'id': 5,
+    'id': -5,
     'name': 'Countries',
     'rating': 3.2,
-    'image': 'assets/wordpacks/countries.png',
+    'asset': 'assets/wordpacks/countries.png',
     'words': [
       {
         'en': 'Italy',

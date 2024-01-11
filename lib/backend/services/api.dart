@@ -6,9 +6,17 @@ import 'package:hive/hive.dart';
 
 import 'package:flash_minds/backend/data/word_packs.dart';
 import 'package:flash_minds/backend/models/object_response.dart';
+import 'package:flash_minds/backend/models/word.dart';
 import 'package:flash_minds/backend/models/wordpack.dart';
 import 'package:flash_minds/backend/secrets.dart';
 import 'package:flash_minds/utils/constants.dart';
+
+enum Method {
+  get,
+  post,
+  patch,
+  delete,
+}
 
 Dio dio = Dio(
   BaseOptions(
@@ -21,19 +29,39 @@ Dio dio = Dio(
 );
 
 class Api {
-  static Future<ObjectResponse<WordPack>> createWordPack({
+  static Future<ObjectResponse<WordPack>> crudWordPack({
     required String name,
+    required String asset,
+    required List<Word> words,
+    int? id,
+    required Method method,
   }) async {
-    Response response = await dio.post(
-      'word_pack',
-      data: {'name': name},
-    );
-    bool success = response.statusCode == 200;
+    Response? response;
+    bool success = false;
 
+    Map<String, dynamic> data = {
+      'name': name,
+      'asset': asset,
+      'words': words.map((w) => w.toJson()).toList(),
+    };
+
+    if (method == Method.post) {
+      response = await dio.post('word_pack', data: data);
+      success = response.statusCode == 201;
+    } else if (method == Method.patch) {
+      assert(id != null);
+      response = await dio.patch('word_pack/$id', data: data);
+      success = response.statusCode == 200;
+    } else if (method == Method.delete) {
+      assert(id != null);
+      response = await dio.delete('word_pack/$id');
+      success = response.statusCode == 204;
+    }
     return ObjectResponse(
       success: success,
-      object: success ? WordPack.fromJson(response.data) : null,
-      errors: response.data['errors'],
+      object: success ? WordPack.fromJson(response!.data) : null,
+      errors:
+          response == null ? ['Method not allowed'] : response.data['errors'],
     );
   }
 
@@ -63,25 +91,6 @@ class Api {
 
     return List<WordPack>.from(
       data.map((wordpack) => WordPack.fromJson(wordpack)),
-    );
-  }
-
-  static Future<ObjectResponse<WordPack>> updateWordPack(
-    int id, {
-    String? name,
-  }) async {
-    Map<String, dynamic> wordPack = {
-      'name': name,
-    };
-    wordPack.removeWhere((key, value) => value == null);
-
-    Response response = await dio.put('word_packs/$id', data: wordPack);
-    bool success = response.statusCode == 200;
-
-    return ObjectResponse(
-      success: success,
-      object: success ? WordPack.fromJson(response.data) : null,
-      errors: response.data['errors'],
     );
   }
 }

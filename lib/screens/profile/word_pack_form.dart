@@ -44,6 +44,22 @@ class _WordPackFormState extends State<WordPackForm> {
   void initState() {
     super.initState();
     isEdit = widget.wordPack != null;
+    if (isEdit) {
+      nameController.text = widget.wordPack!.name;
+      selectedLanguages = widget.wordPack!.languages
+          .map((l) => Languages.values.firstWhere((e) => e.code == l))
+          .toList();
+      words = List.from(widget.wordPack!.words);
+      page = _assets.indexOf(
+        _assets.firstWhere(
+          (a) => a == widget.wordPack!.image.split('/').last.split('.').first,
+        ),
+      );
+      pageController = PageController(
+        viewportFraction: 1 / _assets.length,
+        initialPage: page,
+      );
+    }
   }
 
   @override
@@ -99,7 +115,6 @@ class _WordPackFormState extends State<WordPackForm> {
               ),
               TextFormField(
                 controller: nameController,
-                initialValue: widget.wordPack?.name,
                 decoration: const InputDecoration(labelText: 'Name'),
                 validator: (value) => requiredValidator(value),
                 onTapOutside: (event) => FocusScope.of(context).unfocus(),
@@ -153,13 +168,19 @@ class _WordPackFormState extends State<WordPackForm> {
                     late ObjectResponse response;
                     buttonController.start();
                     if (isEdit) {
-                      response = await Api.updateWordPack(
-                        widget.wordPack!.id,
+                      response = await Api.crudWordPack(
+                        id: widget.wordPack!.id,
                         name: nameController.text,
+                        asset: 'assets/wordpacks/${_assets[page]}.png',
+                        words: words,
+                        method: Method.patch,
                       );
                     } else {
-                      response = await Api.createWordPack(
+                      response = await Api.crudWordPack(
                         name: nameController.text,
+                        asset: 'assets/wordpacks/${_assets[page]}.png',
+                        words: words,
+                        method: Method.post,
                       );
                     }
                     if (!context.mounted) return;
@@ -171,7 +192,7 @@ class _WordPackFormState extends State<WordPackForm> {
                       buttonController.success();
                       await Future.delayed(
                         const Duration(seconds: 1),
-                        () => Navigator.pop(context),
+                        () => Navigator.pop(context, true),
                       );
                     }
                   }
@@ -308,6 +329,7 @@ class _WordPackFormState extends State<WordPackForm> {
                           ? TextField(
                               controller: wordController,
                               focusNode: focusNode,
+                              textCapitalization: TextCapitalization.sentences,
                               decoration: const InputDecoration(
                                 contentPadding: EdgeInsets.symmetric(
                                   horizontal: 4,

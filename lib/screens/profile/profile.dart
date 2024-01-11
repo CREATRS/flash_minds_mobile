@@ -13,8 +13,16 @@ import 'package:flash_minds/utils/constants.dart';
 import 'package:flash_minds/widgets/components/app_icon.dart';
 import 'package:flash_minds/widgets/components/cached_or_asset_image.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({super.key});
+
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  Future<List<WordPack>> getWordPacks() async =>
+      await Api.getWordPacks(me: true);
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +38,12 @@ class Profile extends StatelessWidget {
         return DefaultTabController(
           length: 3,
           child: FutureBuilder(
-            future: Api.getWordPacks(me: true),
-            builder: (context, boughtWordpacks) {
-              if (!boughtWordpacks.hasData) {
+            future: getWordPacks(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
+              List<WordPack> myWordPacks = snapshot.data as List<WordPack>;
               return CustomScrollView(
                 slivers: [
                   SliverAppBar(
@@ -89,13 +98,18 @@ class Profile extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  boughtWordpacks.data!.length.toString(),
+                                  myWordPacks.length.toString(),
                                 ),
                                 const Text('Learning'),
                               ],
                             ),
-                            const Column(
-                              children: [Text('10'), Text('Creations')],
+                            Column(
+                              children: [
+                                Text(
+                                  myWordPacks.length.toString(),
+                                ),
+                                const Text('Creations'),
+                              ],
                             ),
                           ],
                           indicatorWeight: 3,
@@ -111,9 +125,9 @@ class Profile extends StatelessWidget {
                       children: [
                         const Icon(Icons.person_outlined, size: 100),
                         ListView.builder(
-                          itemCount: boughtWordpacks.data!.length,
+                          itemCount: myWordPacks.length,
                           itemBuilder: (context, index) {
-                            WordPack wordpack = boughtWordpacks.data![index];
+                            WordPack wordpack = myWordPacks[index];
                             return ListTile(
                               title: Text(wordpack.name),
                               subtitle: Text(
@@ -127,7 +141,10 @@ class Profile extends StatelessWidget {
                             );
                           },
                         ),
-                        const CreationsTab(),
+                        CreationsTab(
+                          myWordPacks,
+                          refresh: setState,
+                        ),
                       ],
                     ),
                   ),
