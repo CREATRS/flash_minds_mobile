@@ -83,6 +83,20 @@ class _Drawer extends StatelessWidget {
         children: [
           UserAccountsDrawerHeader(
             otherAccountsPictures: [
+              Stack(
+                children: [
+                  if (user.targetLanguage != null)
+                    Positioned(
+                      left: 12,
+                      child: user.targetLanguage!.image(width: 24),
+                    ),
+                  if (user.sourceLanguage != null)
+                    Positioned(
+                      top: 4,
+                      child: user.sourceLanguage!.image(width: 24),
+                    ),
+                ],
+              ),
               Icon(
                 Icons.dark_mode_rounded,
                 color: theme.secondaryHeaderColor,
