@@ -116,6 +116,7 @@ class _WordPackFormState extends State<WordPackForm> {
               TextFormField(
                 controller: nameController,
                 decoration: const InputDecoration(labelText: 'Name'),
+                textCapitalization: TextCapitalization.sentences,
                 validator: (value) => requiredValidator(value),
                 onTapOutside: (event) => FocusScope.of(context).unfocus(),
               ),
@@ -168,19 +169,17 @@ class _WordPackFormState extends State<WordPackForm> {
                     late ObjectResponse response;
                     buttonController.start();
                     if (isEdit) {
-                      response = await Api.crudWordPack(
-                        id: widget.wordPack!.id,
+                      response = await Api.updateWordPack(
+                        widget.wordPack!.id,
                         name: nameController.text,
                         asset: 'assets/wordpacks/${_assets[page]}.png',
                         words: words,
-                        method: Method.patch,
                       );
                     } else {
-                      response = await Api.crudWordPack(
+                      response = await Api.createWordPack(
                         name: nameController.text,
                         asset: 'assets/wordpacks/${_assets[page]}.png',
                         words: words,
-                        method: Method.post,
                       );
                     }
                     if (!context.mounted) return;
@@ -198,6 +197,39 @@ class _WordPackFormState extends State<WordPackForm> {
                   }
                 },
               ),
+              if (isEdit)
+                TextButton(
+                  onPressed: () async {
+                    bool? sure = await Get.dialog(
+                      AlertDialog(
+                        title: const Text('Are you sure?'),
+                        content: const Text(
+                          "You'll lose all the data you've added, "
+                          "including user's ratings",
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, true),
+                            child: const Text('Delete'),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (!(sure ?? false)) return;
+                    await Api.deleteWordPack(widget.wordPack!.id);
+                    if (!context.mounted) return;
+                    Navigator.pop(context, true);
+                  },
+                  child: Text(
+                    'Delete',
+                    style: TextStyles.pMedium
+                        .copyWith(color: Theme.of(context).primaryColor),
+                  ),
+                ),
             ],
           ),
         ),
@@ -329,13 +361,13 @@ class _WordPackFormState extends State<WordPackForm> {
                           ? TextField(
                               controller: wordController,
                               focusNode: focusNode,
-                              textCapitalization: TextCapitalization.sentences,
                               decoration: const InputDecoration(
                                 contentPadding: EdgeInsets.symmetric(
                                   horizontal: 4,
                                 ),
                               ),
                               textInputAction: TextInputAction.next,
+                              textCapitalization: TextCapitalization.sentences,
                               onSubmitted: (value) {
                                 if (wordController.text.isNotEmpty) {
                                   word.set(

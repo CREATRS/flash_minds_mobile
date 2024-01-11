@@ -29,12 +29,41 @@ Dio dio = Dio(
 );
 
 class Api {
-  static Future<ObjectResponse<WordPack>> crudWordPack({
+  static Future<ObjectResponse<WordPack>> createWordPack({
     required String name,
     required String asset,
     required List<Word> words,
+  }) async =>
+      await _crudWordPack(
+        Method.post,
+        name: name,
+        asset: asset,
+        words: words,
+      );
+
+  static Future<ObjectResponse<WordPack>> updateWordPack(
+    int id, {
+    String? name,
+    String? asset,
+    List<Word>? words,
+  }) async =>
+      await _crudWordPack(
+        Method.patch,
+        id: id,
+        name: name,
+        asset: asset,
+        words: words,
+      );
+
+  static Future<ObjectResponse<WordPack>> deleteWordPack(int id) async =>
+      await _crudWordPack(Method.delete, id: id);
+
+  static Future<ObjectResponse<WordPack>> _crudWordPack(
+    Method method, {
     int? id,
-    required Method method,
+    String? name,
+    String? asset,
+    List<Word>? words,
   }) async {
     Response? response;
     bool success = false;
@@ -42,8 +71,9 @@ class Api {
     Map<String, dynamic> data = {
       'name': name,
       'asset': asset,
-      'words': words.map((w) => w.toJson()).toList(),
+      'words': words?.map((w) => w.toJson()).toList(),
     };
+    data.removeWhere((key, value) => value == null);
 
     if (method == Method.post) {
       response = await dio.post('word_pack', data: data);
@@ -55,7 +85,7 @@ class Api {
     } else if (method == Method.delete) {
       assert(id != null);
       response = await dio.delete('word_pack/$id');
-      success = response.statusCode == 204;
+      return ObjectResponse(success: response.statusCode == 204);
     }
     return ObjectResponse(
       success: success,
