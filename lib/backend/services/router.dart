@@ -23,6 +23,14 @@ Route<dynamic> router(RouteSettings settings) {
       screen = FlashCards(settings.arguments as WordPack);
       hasOwnAppBar = true;
       break;
+    case Routes.flashCardsStep1:
+      screen = Step1(
+        selectedWordPack: settings.arguments as WordPack,
+        sourceLanguage: auth.user.value!.sourceLanguage!,
+        targetLanguage: auth.user.value!.targetLanguage!,
+      );
+      hasOwnAppBar = true;
+      break;
     case Routes.home:
       screen = const Home();
       break;

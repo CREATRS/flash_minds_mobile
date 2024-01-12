@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 class Routes {
   static const String createWordpack = '/create_wordpack';
   static const String flashCards = '/flash_cards';
+  static const String flashCardsStep1 = '/flash_cards/step_1';
   static const String home = '/';
   static const String profile = '/profile';
   static const String selectWordpack = '/select_wordpack';
@@ -25,7 +26,7 @@ class Urls {
 
 // Style
 class AppColors {
-  static const Color grey = Color(0xFF9E9E9E);  // shade500
+  static const Color grey = Color(0xFF9E9E9E); // shade500
   static const Color red = Color(0xFFA41623);
   static const Color lightRed = Color(0xFFEF6A69);
 }
@@ -40,4 +41,8 @@ class TextStyles {
   static const h4 = TextStyle(fontSize: 14, fontWeight: FontWeight.bold);
   static const pMedium = TextStyle(fontSize: 14);
   static const pSmall = TextStyle(fontSize: 12);
+
+  static const List<Shadow> shadows = [
+    Shadow(offset: Offset(2.0, 2.0), blurRadius: 5, color: Colors.black45),
+  ];
 }
