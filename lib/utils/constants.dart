@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class Routes {
   static const String createWordpack = '/create_wordpack';
-  // static const String game = '/game';
+  static const String flashCards = '/flash_cards';
   static const String home = '/';
   static const String profile = '/profile';
   static const String selectWordpack = '/select_wordpack';

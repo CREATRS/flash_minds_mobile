@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:flash_minds/backend/models/user.dart';
+import 'package:flash_minds/backend/models/wordpack.dart';
 import 'package:flash_minds/backend/services/app_state.dart';
 import 'package:flash_minds/backend/services/auth.dart';
 import 'package:flash_minds/screens/authentication/authentication.dart';
+import 'package:flash_minds/screens/flash_cards/flash_cards.dart';
 import 'package:flash_minds/screens/home.dart';
 import 'package:flash_minds/screens/profile/profile.dart';
 import 'package:flash_minds/screens/select_word_pack.dart';
@@ -17,13 +19,10 @@ Route<dynamic> router(RouteSettings settings) {
   bool hasOwnAppBar = false;
 
   switch (settings.name) {
-    // case Routes.game:
-    //   Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
-    //   screen = HangmanGame(
-    //     wordPack: args[StorageKeys.wordPacks],
-    //     progress: args['progress'],
-    //   );
-    //   break;
+    case Routes.flashCards:
+      screen = FlashCards(settings.arguments as WordPack);
+      hasOwnAppBar = true;
+      break;
     case Routes.home:
       screen = const Home();
       break;
