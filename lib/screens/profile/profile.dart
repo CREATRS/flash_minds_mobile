@@ -43,6 +43,30 @@ class _ProfileState extends State<Profile> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
+              if (snapshot.hasError) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'There was an error trying to load your word packs.\n\n',
+                      style: TextStyles.pMedium,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => setState(() {}),
+                          child: const Text('Refresh'),
+                        ),
+                      ],
+                    ),
+                    TextButton(
+                      onPressed: () => Scaffold.of(context).openDrawer(),
+                      child: const Text('Go back'),
+                    ),
+                  ],
+                );
+              }
               List<WordPack> myWordPacks = snapshot.data as List<WordPack>;
               return CustomScrollView(
                 slivers: [

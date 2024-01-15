@@ -90,8 +90,11 @@ class Api {
     return ObjectResponse(
       success: success,
       object: success ? WordPack.fromJson(response!.data) : null,
-      errors:
-          response == null ? ['Method not allowed'] : response.data['errors'],
+      errors: response == null
+          ? ['Method not allowed']
+          : response.data.runtimeType is String
+              ? [response.data]
+              : response.data['errors'],
     );
   }
 
@@ -103,12 +106,16 @@ class Api {
     if (await _hasInternet()) {
       try {
         Response webResponse = await dio.get('word_pack');
+        if (webResponse.statusCode != 200) throw Exception();
+
         List<Map<String, dynamic>> wr =
             List<Map<String, dynamic>>.from(webResponse.data);
         data = wr + data;
         box.put(StorageKeys.wordPacks, jsonEncode(wr));
         fetched = true;
       } on DioException catch (_) {
+        fetched = false;
+      } on Exception catch (_) {
         fetched = false;
       }
     }
