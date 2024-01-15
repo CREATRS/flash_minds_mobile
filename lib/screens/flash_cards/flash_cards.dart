@@ -7,6 +7,7 @@ import 'package:flash_minds/utils/constants.dart';
 import 'package:flash_minds/widgets/components/text_icon_button.dart';
 
 export 'step_1.dart';
+export 'step_2.dart';
 
 class FlashCards extends StatefulWidget {
   const FlashCards(this.selectedPack, {super.key});
@@ -36,7 +37,7 @@ class _FlashCardsState extends State<FlashCards> {
           'Step $step Completed',
           snackPosition: SnackPosition.BOTTOM,
         );
-        setState(() => _completedSteps.add(1));
+        setState(() => _completedSteps.add(step));
       }
     });
   }
