@@ -19,6 +19,27 @@ class FlashCards extends StatefulWidget {
 
 class _FlashCardsState extends State<FlashCards> {
   final List<int> _completedSteps = [];
+  Future doStep(int step) async {
+    await Navigator.pushNamed(
+      context,
+      [
+        Routes.flashCardsStep1,
+        Routes.flashCardsStep2,
+        Routes.flashCardsStep3,
+        Routes.flashCardsStep4,
+      ][step - 1],
+      arguments: widget.selectedPack,
+    ).then((value) async {
+      if (value == true) {
+        Get.snackbar(
+          'Congratulations!',
+          'Step $step Completed',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        setState(() => _completedSteps.add(1));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,29 +63,14 @@ class _FlashCardsState extends State<FlashCards> {
                   'and guess the foreign language translation',
               color: const Color(0xFF053C5E),
               gradientColor: const Color(0xFF1F3958),
-              onTap: () async {
-                await Navigator.pushNamed(
-                  context,
-                  Routes.flashCardsStep1,
-                  arguments: widget.selectedPack,
-                ).then((value) async {
-                  if (value == true) {
-                    Get.snackbar(
-                      'Congratulations!',
-                      'Step 1 Completed',
-                      snackPosition: SnackPosition.BOTTOM,
-                    );
-                    setState(() => _completedSteps.add(1));
-                  }
-                });
-              },
+              onTap: () => doStep(1),
             ),
             _stageCard(
               2,
               description: 'Click on REVEAL, and see if you guessed it right',
               color: const Color(0xFF353652),
               gradientColor: const Color(0xFF4C334D),
-              onTap: () async {},
+              onTap: () => doStep(2),
             ),
             _stageCard(
               3,
@@ -72,7 +78,7 @@ class _FlashCardsState extends State<FlashCards> {
                   'this time guessing the native language translation',
               color: const Color(0xFF643047),
               gradientColor: const Color(0xFF7C2E41),
-              onTap: () async {},
+              onTap: () => doStep(3),
             ),
             _stageCard(
               4,
@@ -80,14 +86,27 @@ class _FlashCardsState extends State<FlashCards> {
                   'and guess the foreign language translation',
               color: const Color(0xFF942B3B),
               gradientColor: const Color(0xFFAB2836),
-              onTap: () async {},
+              onTap: () => doStep(4),
             ),
             Padding(
               padding: const EdgeInsets.only(right: 8, bottom: 18),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextIconButton("Let's Begin", onPressed: () {}),
+                  TextIconButton(
+                    "Let's Begin",
+                    onPressed: () {
+                      if (!_completedSteps.contains(1)) {
+                        doStep(1);
+                      } else if (!_completedSteps.contains(2)) {
+                        doStep(2);
+                      } else if (!_completedSteps.contains(3)) {
+                        doStep(3);
+                      } else if (!_completedSteps.contains(4)) {
+                        doStep(4);
+                      }
+                    },
+                  ),
                 ],
               ),
             ),

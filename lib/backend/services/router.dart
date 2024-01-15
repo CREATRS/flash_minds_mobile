@@ -24,6 +24,9 @@ Route<dynamic> router(RouteSettings settings) {
       hasOwnAppBar = true;
       break;
     case Routes.flashCardsStep1:
+    case Routes.flashCardsStep2:
+    case Routes.flashCardsStep3:
+    case Routes.flashCardsStep4:
       screen = Step1(
         selectedWordPack: settings.arguments as WordPack,
         sourceLanguage: auth.user.value!.sourceLanguage!,

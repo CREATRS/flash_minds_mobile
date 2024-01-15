@@ -7,6 +7,9 @@ class Routes {
   static const String createWordpack = '/create_wordpack';
   static const String flashCards = '/flash_cards';
   static const String flashCardsStep1 = '/flash_cards/step_1';
+  static const String flashCardsStep2 = '/flash_cards/step_2';
+  static const String flashCardsStep3 = '/flash_cards/step_3';
+  static const String flashCardsStep4 = '/flash_cards/step_4';
   static const String home = '/';
   static const String profile = '/profile';
   static const String selectWordpack = '/select_wordpack';
