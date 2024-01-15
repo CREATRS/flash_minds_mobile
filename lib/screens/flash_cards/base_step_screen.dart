@@ -16,32 +16,28 @@ class BaseStepScreen extends StatefulWidget {
     required this.targetLanguage,
     required this.childBuilder,
     this.backChildBuilder,
-  });
+    this.flipKeys,
+    this.bottomWidget,
+  }) : assert(
+          backChildBuilder == null || flipKeys != null,
+          'If you want to use a backChildBuilder,'
+          ' you must provide a list of flipKeys',
+        );
   final int step;
   final WordPack selectedWordPack;
   final Language sourceLanguage;
   final Language targetLanguage;
   final Widget Function(int i) childBuilder;
   final Widget Function(int i)? backChildBuilder;
+  final List<GlobalKey<FlipCardState>>? flipKeys;
+  final Widget? bottomWidget;
 
   @override
   BaseStepScreenState createState() => BaseStepScreenState();
 }
 
 class BaseStepScreenState extends State<BaseStepScreen> {
-  int _flashCardProgress = 0;
-  List<GlobalKey<FlipCardState>>? keys;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.backChildBuilder != null) {
-      keys = List.generate(
-        widget.selectedWordPack.words.length,
-        (_) => GlobalKey<FlipCardState>(),
-      );
-    }
-  }
+  int flashCardProgress = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -62,18 +58,12 @@ class BaseStepScreenState extends State<BaseStepScreen> {
             ],
           ),
           const Spacer(),
-          _buildCards(widget.childBuilder, widget.backChildBuilder, keys),
+          _buildCards(widget.childBuilder, widget.backChildBuilder),
           Text(
-            '${_flashCardProgress + 1}/${widget.selectedWordPack.words.length}',
+            '${flashCardProgress + 1}/${widget.selectedWordPack.words.length}',
             style: TextStyles.pMedium.copyWith(color: AppColors.grey),
           ),
-          if (widget.backChildBuilder != null)
-            TextIconButton(
-              'Reveal',
-              icon: Icons.flip,
-              iconRotation: 1.5,
-              onPressed: () => keys![_flashCardProgress].currentState!.flip(),
-            ),
+          if (widget.bottomWidget != null) widget.bottomWidget!,
           const Spacer(),
           const Text(
             'Swipe left or right to reveal more cards',
@@ -82,7 +72,7 @@ class BaseStepScreenState extends State<BaseStepScreen> {
           ),
           LinearProgressIndicator(
             value:
-                (_flashCardProgress + 1) / widget.selectedWordPack.words.length,
+                (flashCardProgress + 1) / widget.selectedWordPack.words.length,
             color: AppColors.red,
             minHeight: 8,
             borderRadius: BorderRadius.circular(8),
@@ -91,7 +81,7 @@ class BaseStepScreenState extends State<BaseStepScreen> {
           AnimatedSlide(
             duration: duration,
             offset: Offset(
-              _flashCardProgress == widget.selectedWordPack.words.length - 1
+              flashCardProgress == widget.selectedWordPack.words.length - 1
                   ? 0
                   : 1,
               0,
@@ -111,13 +101,13 @@ class BaseStepScreenState extends State<BaseStepScreen> {
           ),
         ],
       ),
+      resizeToAvoidBottomInset: false,
     );
   }
 
   Widget _buildCards(
     Widget Function(int i) childBuilder,
     Widget Function(int i)? backChildBuilder,
-    List<GlobalKey<FlipCardState>>? keys,
   ) {
     return Flexible(
       flex: 4,
@@ -125,8 +115,7 @@ class BaseStepScreenState extends State<BaseStepScreen> {
         itemCount: widget.selectedWordPack.words.length,
         controller: PageController(viewportFraction: 0.75),
         physics: const BouncingScrollPhysics(),
-        onPageChanged: (int index) =>
-            setState(() => _flashCardProgress = index),
+        onPageChanged: (int index) => setState(() => flashCardProgress = index),
         itemBuilder: (_, i) {
           Card front = Card(
             elevation: 6,
@@ -181,11 +170,11 @@ class BaseStepScreenState extends State<BaseStepScreen> {
               Expanded(
                 child: AnimatedScale(
                   duration: duration,
-                  scale: i == _flashCardProgress ? 1 : 0.8,
+                  scale: i == flashCardProgress ? 1 : 0.8,
                   child: backChildBuilder == null
                       ? front
                       : FlipCard(
-                          key: keys![i],
+                          key: widget.flipKeys![i],
                           front: front,
                           back: Card(
                             elevation: 6,
