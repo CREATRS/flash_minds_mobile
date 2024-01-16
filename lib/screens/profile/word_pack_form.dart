@@ -142,8 +142,8 @@ class _WordPackFormState extends State<WordPackForm> {
                       setState(() => errors = 'Select at least 2 languages');
                       return;
                     }
-                    if (words.isEmpty) {
-                      setState(() => errors = 'Add at least 1 word');
+                    if (words.length < 2) {
+                      setState(() => errors = 'Add at least 2 word');
                       return;
                     }
                     Word? word = words
