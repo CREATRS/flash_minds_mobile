@@ -1,5 +1,3 @@
-import 'dart:math' show pi;
-
 import 'package:flutter/material.dart';
 
 import 'package:flash_minds/backend/models/language.dart';
@@ -35,14 +33,7 @@ class Step1 extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          Transform.rotate(
-            angle: pi / 2,
-            child: Icon(
-              Icons.compare_arrows,
-              size: 45,
-              color: Colors.grey.shade300,
-            ),
-          ),
+          Icon(Icons.swap_vert, size: 45, color: Colors.grey.shade300),
           Text(
             selectedWordPack.words[i].get(targetLanguage.code),
             style: TextStyles.h1.copyWith(

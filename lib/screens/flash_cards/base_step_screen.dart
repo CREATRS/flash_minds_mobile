@@ -18,6 +18,8 @@ class BaseStepScreen extends StatefulWidget {
     this.backChildBuilder,
     this.flipKeys,
     this.bottomWidget,
+    this.requiresCompletion = false,
+    this.onPageChanged,
   }) : assert(
           backChildBuilder == null || flipKeys != null,
           'If you want to use a backChildBuilder,'
@@ -31,6 +33,8 @@ class BaseStepScreen extends StatefulWidget {
   final Widget Function(int i)? backChildBuilder;
   final List<GlobalKey<FlipCardState>>? flipKeys;
   final Widget? bottomWidget;
+  final bool requiresCompletion;
+  final void Function(int _)? onPageChanged;
 
   @override
   BaseStepScreenState createState() => BaseStepScreenState();
@@ -38,6 +42,15 @@ class BaseStepScreen extends StatefulWidget {
 
 class BaseStepScreenState extends State<BaseStepScreen> {
   int flashCardProgress = 0;
+  bool? isCompleted;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.requiresCompletion) {
+      isCompleted = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +94,10 @@ class BaseStepScreenState extends State<BaseStepScreen> {
           AnimatedSlide(
             duration: duration,
             offset: Offset(
-              flashCardProgress == widget.selectedWordPack.words.length - 1
+              isCompleted == true ||
+                      (isCompleted == null &&
+                          flashCardProgress ==
+                              widget.selectedWordPack.words.length - 1)
                   ? 0
                   : 1,
               0,
@@ -115,11 +131,14 @@ class BaseStepScreenState extends State<BaseStepScreen> {
         itemCount: widget.selectedWordPack.words.length,
         controller: PageController(viewportFraction: 0.75),
         physics: const BouncingScrollPhysics(),
-        onPageChanged: (int index) => setState(() => flashCardProgress = index),
+        onPageChanged: (int index) {
+          widget.onPageChanged?.call(index);
+          setState(() => flashCardProgress = index);
+        },
         itemBuilder: (_, i) {
           Card front = Card(
             elevation: 6,
-            color: const Color(0xFF82C6E6),
+            color: AppColors.lightBlue,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(24),
             ),

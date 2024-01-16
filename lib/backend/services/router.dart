@@ -32,9 +32,16 @@ Route<dynamic> router(RouteSettings settings) {
       hasOwnAppBar = true;
       break;
     case Routes.flashCardsStep2:
+      screen = Step2(
+        selectedWordPack: settings.arguments as WordPack,
+        sourceLanguage: auth.user.value!.sourceLanguage!,
+        targetLanguage: auth.user.value!.targetLanguage!,
+      );
+      hasOwnAppBar = true;
+      break;
     case Routes.flashCardsStep3:
     case Routes.flashCardsStep4:
-      screen = Step2(
+      screen = Step3(
         selectedWordPack: settings.arguments as WordPack,
         sourceLanguage: auth.user.value!.sourceLanguage!,
         targetLanguage: auth.user.value!.targetLanguage!,
@@ -62,6 +69,7 @@ Route<dynamic> router(RouteSettings settings) {
               appBar: hasOwnAppBar ? null : AppBar(),
               body: screen,
               drawer: const _Drawer(),
+              resizeToAvoidBottomInset: false,
             )
           : const Authentication(),
     ),

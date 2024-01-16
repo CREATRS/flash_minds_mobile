@@ -29,8 +29,10 @@ class Urls {
 
 // Style
 class AppColors {
+  static const Color blue = Color(0xFF1C7EAB);
   static const Color grey = Color(0xFF9E9E9E); // shade500
   static const Color red = Color(0xFFA41623);
+  static const Color lightBlue = Color(0xFF82C6E6);
   static const Color lightRed = Color(0xFFEF6A69);
 }
 
