@@ -25,6 +25,7 @@ class Step2 extends StatelessWidget {
       (_) => GlobalKey<FlipCardState>(),
     );
     GlobalKey<BaseStepScreenState> key = GlobalKey<BaseStepScreenState>();
+
     return BaseStepScreen(
       2,
       key: key,

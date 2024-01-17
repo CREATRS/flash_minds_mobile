@@ -22,6 +22,11 @@ class Step3 extends StatefulWidget {
 }
 
 class _Step3State extends State<Step3> {
+  GlobalKey<BaseStepScreenState> baseStepKey = GlobalKey<BaseStepScreenState>();
+  GlobalKey<__AnimatedButtonIconState> buttonKey =
+      GlobalKey<__AnimatedButtonIconState>();
+  int index = 0;
+
   late List<TextEditingController> controllers;
   late List<bool?> answers;
 
@@ -37,11 +42,6 @@ class _Step3State extends State<Step3> {
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey<BaseStepScreenState> baseStepKey =
-        GlobalKey<BaseStepScreenState>();
-    GlobalKey<__AnimatedButtonIconState> buttonKey =
-        GlobalKey<__AnimatedButtonIconState>();
-    int index = 0;
     bool? answer = answers[index];
     String typed = controllers[index].text.toUpperCase();
     String expected =
