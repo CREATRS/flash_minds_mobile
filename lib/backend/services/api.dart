@@ -11,12 +11,7 @@ import 'package:flash_minds/backend/models/wordpack.dart';
 import 'package:flash_minds/backend/secrets.dart';
 import 'package:flash_minds/utils/constants.dart';
 
-enum Method {
-  get,
-  post,
-  patch,
-  delete,
-}
+enum _Method { post, patch, delete }
 
 Dio dio = Dio(
   BaseOptions(
@@ -35,7 +30,7 @@ class Api {
     required List<Word> words,
   }) async =>
       await _crudWordPack(
-        Method.post,
+        _Method.post,
         name: name,
         asset: asset,
         words: words,
@@ -48,7 +43,7 @@ class Api {
     List<Word>? words,
   }) async =>
       await _crudWordPack(
-        Method.patch,
+        _Method.patch,
         id: id,
         name: name,
         asset: asset,
@@ -56,10 +51,10 @@ class Api {
       );
 
   static Future<ObjectResponse<WordPack>> deleteWordPack(int id) async =>
-      await _crudWordPack(Method.delete, id: id);
+      await _crudWordPack(_Method.delete, id: id);
 
   static Future<ObjectResponse<WordPack>> _crudWordPack(
-    Method method, {
+    _Method method, {
     int? id,
     String? name,
     String? asset,
@@ -75,14 +70,14 @@ class Api {
     };
     data.removeWhere((key, value) => value == null);
 
-    if (method == Method.post) {
+    if (method == _Method.post) {
       response = await dio.post('word_pack', data: data);
       success = response.statusCode == 201;
-    } else if (method == Method.patch) {
+    } else if (method == _Method.patch) {
       assert(id != null);
       response = await dio.patch('word_pack/$id', data: data);
       success = response.statusCode == 200;
-    } else if (method == Method.delete) {
+    } else if (method == _Method.delete) {
       assert(id != null);
       response = await dio.delete('word_pack/$id');
       return ObjectResponse(success: response.statusCode == 204);
