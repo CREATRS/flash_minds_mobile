@@ -9,6 +9,7 @@ import 'package:flash_minds/widgets/components/text_icon_button.dart';
 export 'step_1.dart';
 export 'step_2.dart';
 export 'step_3.dart';
+export 'step_4.dart';
 
 class FlashCards extends StatefulWidget {
   const FlashCards(this.selectedPack, {super.key});

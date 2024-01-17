@@ -18,6 +18,7 @@ class BaseStepScreen extends StatefulWidget {
     this.backChildBuilder,
     this.flipKeys,
     this.bottomWidget,
+    this.spaceAfterBottomWidget = true,
     this.requiresCompletion = false,
     this.onPageChanged,
   }) : assert(
@@ -33,6 +34,7 @@ class BaseStepScreen extends StatefulWidget {
   final Widget Function(int i)? backChildBuilder;
   final List<GlobalKey<FlipCardState>>? flipKeys;
   final Widget? bottomWidget;
+  final bool spaceAfterBottomWidget;
   final bool requiresCompletion;
   final void Function(int _)? onPageChanged;
 
@@ -43,6 +45,17 @@ class BaseStepScreen extends StatefulWidget {
 class BaseStepScreenState extends State<BaseStepScreen> {
   int flashCardProgress = 0;
   bool? isCompleted;
+  PageController pageController = PageController(viewportFraction: 0.75);
+
+  void nextPage() {
+    if (pageController.page == widget.selectedWordPack.words.length - 1) {
+      return;
+    }
+    pageController.nextPage(
+      duration: duration,
+      curve: Curves.easeInOut,
+    );
+  }
 
   @override
   void initState() {
@@ -77,7 +90,7 @@ class BaseStepScreenState extends State<BaseStepScreen> {
             style: TextStyles.pMedium.copyWith(color: AppColors.grey),
           ),
           if (widget.bottomWidget != null) widget.bottomWidget!,
-          const Spacer(),
+          if (widget.spaceAfterBottomWidget) const Spacer(),
           const Text(
             'Swipe left or right to reveal more cards',
             style: TextStyles.pMedium,
@@ -129,7 +142,7 @@ class BaseStepScreenState extends State<BaseStepScreen> {
       flex: 4,
       child: PageView.builder(
         itemCount: widget.selectedWordPack.words.length,
-        controller: PageController(viewportFraction: 0.75),
+        controller: pageController,
         physics: const BouncingScrollPhysics(),
         onPageChanged: (int index) {
           widget.onPageChanged?.call(index);
