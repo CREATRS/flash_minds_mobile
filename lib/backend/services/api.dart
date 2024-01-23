@@ -24,35 +24,7 @@ Dio dio = Dio(
 );
 
 class Api {
-  static Future<ObjectResponse<WordPack>> createWordPack({
-    required String name,
-    required String asset,
-    required List<Word> words,
-  }) async =>
-      await _crudWordPack(
-        _Method.post,
-        name: name,
-        asset: asset,
-        words: words,
-      );
-
-  static Future<ObjectResponse<WordPack>> updateWordPack(
-    int id, {
-    String? name,
-    String? asset,
-    List<Word>? words,
-  }) async =>
-      await _crudWordPack(
-        _Method.patch,
-        id: id,
-        name: name,
-        asset: asset,
-        words: words,
-      );
-
-  static Future<ObjectResponse<WordPack>> deleteWordPack(int id) async =>
-      await _crudWordPack(_Method.delete, id: id);
-
+  // CRUD
   static Future<ObjectResponse<WordPack>> _crudWordPack(
     _Method method, {
     int? id,
@@ -93,6 +65,21 @@ class Api {
     );
   }
 
+  static Future<ObjectResponse<WordPack>> createWordPack({
+    required String name,
+    required String asset,
+    required List<Word> words,
+  }) async =>
+      await _crudWordPack(
+        _Method.post,
+        name: name,
+        asset: asset,
+        words: words,
+      );
+
+  static Future<ObjectResponse<WordPack>> deleteWordPack(int id) async =>
+      await _crudWordPack(_Method.delete, id: id);
+
   static Future<List<WordPack>> getWordPacks({bool me = false}) async {
     List<Map<String, dynamic>> data = me ? [] : StaticData.wordPacks.data!;
     Box box = Hive.box(StorageKeys.box);
@@ -125,6 +112,20 @@ class Api {
       data.map((wordpack) => WordPack.fromJson(wordpack)),
     );
   }
+
+  static Future<ObjectResponse<WordPack>> updateWordPack(
+    int id, {
+    String? name,
+    String? asset,
+    List<Word>? words,
+  }) async =>
+      await _crudWordPack(
+        _Method.patch,
+        id: id,
+        name: name,
+        asset: asset,
+        words: words,
+      );
 
   static Future<bool> rateWordPack(int id, {required int rating}) async {
     Response response = await dio.post(
