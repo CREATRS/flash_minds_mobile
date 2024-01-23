@@ -9,6 +9,7 @@ class User {
     this.targetLanguage,
     this.avatar,
     this.token,
+    this.progress = const [],
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -20,6 +21,10 @@ class User {
       targetLanguage: Languages.get(json['target_language']),
       avatar: json['avatar'],
       token: json['token'],
+      progress: List<UserProgress>.from(
+        json['progress']['values']
+            .map((progress) => UserProgress.fromJson(progress)),
+      ),
     );
   }
 
@@ -30,6 +35,7 @@ class User {
   final Language? targetLanguage;
   final String? avatar;
   final String? token;
+  final List<UserProgress> progress;
 
   Map<String, dynamic> toJson() {
     return {
@@ -40,6 +46,7 @@ class User {
       'target_language': targetLanguage?.code,
       'avatar': avatar,
       'token': token,
+      'progress': progress.map((progress) => progress.toJson()).toList(),
     };
   }
 
@@ -50,6 +57,7 @@ class User {
     String? targetLanguage,
     String? avatar,
     String? token,
+    List<UserProgress>? progress,
   }) {
     return User(
       id: id,
@@ -63,8 +71,26 @@ class User {
           : Languages.get(targetLanguage),
       avatar: avatar ?? this.avatar,
       token: token ?? this.token,
+      progress: progress ?? this.progress,
     );
   }
 
   bool get hasLanguages => sourceLanguage != null && targetLanguage != null;
+}
+
+class UserProgress {
+  UserProgress({
+    required this.id,
+    required this.completed,
+  });
+
+  factory UserProgress.fromJson(Map<String, dynamic> json) => UserProgress(
+        id: int.parse(json['word_pack_id']),
+        completed: List<int>.from(json['completed_steps']),
+      );
+
+  final int id;
+  final List<int> completed;
+
+  Map<String, dynamic> toJson() => {'id': id, 'completed': completed};
 }

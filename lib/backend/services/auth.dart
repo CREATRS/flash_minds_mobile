@@ -80,7 +80,7 @@ class AuthService extends GetxController {
       await _saveUser();
       return null;
     } else {
-      return response.data['error'];
+      return response.data['error'] ?? response.data['errors'][0]['message'];
     }
   }
 
@@ -90,6 +90,8 @@ class AuthService extends GetxController {
     String? avatar,
     String? sourceLanguage,
     String? targetLanguage,
+    List<UserProgress>? progress,
+    bool updateOnServer = true,
   }) async {
     var data = {
       'name': name,
@@ -97,11 +99,24 @@ class AuthService extends GetxController {
       'avatar': avatar,
       'source_language': sourceLanguage,
       'target_language': targetLanguage,
+      'progress': progress?.map((progress) => progress.toJson()).toList(),
     };
     data.removeWhere((_, value) => value == null);
-    var updatedUser = await dio.patch('account/${user.value!.id}/', data: data);
-    user.value =
-        User.fromJson({...updatedUser.data, 'token': user.value!.token});
+    if (updateOnServer) {
+      var updatedUser =
+          await dio.patch('account/${user.value!.id}/', data: data);
+      user.value =
+          User.fromJson({...updatedUser.data, 'token': user.value!.token});
+    } else {
+      user.value = user.value!.copyWith(
+        name: name,
+        email: email,
+        avatar: avatar,
+        sourceLanguage: sourceLanguage,
+        targetLanguage: targetLanguage,
+        progress: progress,
+      );
+    }
     await _saveUser();
     update();
   }

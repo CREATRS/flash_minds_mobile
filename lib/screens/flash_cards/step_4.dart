@@ -58,7 +58,7 @@ class _Step4State extends State<Step4> {
           widget.selectedWordPack.words[index].get(widget.targetLanguage.code);
     }
 
-    void onPressed(int i) {
+    void onPressed(int i) async {
       if (answers[index] != null) {
         return;
       }
@@ -76,21 +76,20 @@ class _Step4State extends State<Step4> {
       if (correct + incorrect == widget.selectedWordPack.words.length) {
         Future.delayed(
           const Duration(seconds: 1),
-          () => Navigator.of(context).popAndPushNamed(
-            Routes.flashCardsCompleted,
-            result: true,
-            arguments: {
-              'correct': correct,
-              'incorrect': incorrect,
-              'word_pack_id': widget.selectedWordPack.id,
-            },
-          ).then(
-            (value) {
-              if (value == true) {
-                widget.replay();
-              }
-            },
-          ),
+          () async {
+            dynamic replay = await Navigator.of(context).popAndPushNamed(
+              Routes.flashCardsCompleted,
+              result: true,
+              arguments: {
+                'correct': correct,
+                'incorrect': incorrect,
+                'word_pack_id': widget.selectedWordPack.id,
+              },
+            );
+            if (replay == true) {
+              widget.replay();
+            }
+          },
         );
       }
     }

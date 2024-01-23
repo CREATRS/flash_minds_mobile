@@ -6,6 +6,7 @@ import 'package:hive/hive.dart';
 
 import 'package:flash_minds/backend/data/word_packs.dart';
 import 'package:flash_minds/backend/models/object_response.dart';
+import 'package:flash_minds/backend/models/user.dart';
 import 'package:flash_minds/backend/models/word.dart';
 import 'package:flash_minds/backend/models/wordpack.dart';
 import 'package:flash_minds/backend/secrets.dart';
@@ -127,12 +128,28 @@ class Api {
         words: words,
       );
 
+  // Other
   static Future<bool> rateWordPack(int id, {required int rating}) async {
     Response response = await dio.post(
       'word_pack/$id/rate/',
       data: {'rating': rating},
     );
     return response.statusCode == 200;
+  }
+
+  static Future<List<UserProgress>> trackWordPack(
+    int id, {
+    List<int> steps = const [],
+  }) async {
+    Response response = await dio.post(
+      'word_pack/$id/track/',
+      data: {'progress': steps},
+    );
+    return List<UserProgress>.from(
+      List<Map<String, dynamic>>.from(response.data['values']).map(
+        (progress) => UserProgress.fromJson(progress),
+      ),
+    );
   }
 }
 

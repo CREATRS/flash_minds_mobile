@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import 'package:flash_minds/backend/models/user.dart';
 import 'package:flash_minds/backend/models/wordpack.dart';
+import 'package:flash_minds/backend/services/api.dart';
 import 'package:flash_minds/backend/services/app_state.dart';
+import 'package:flash_minds/backend/services/auth.dart';
 import 'package:flash_minds/utils/constants.dart';
 import 'package:flash_minds/widgets/components/text_icon_button.dart';
 
@@ -23,8 +26,10 @@ class FlashCards extends StatefulWidget {
 
 class _FlashCardsState extends State<FlashCards> {
   final List<int> _completedSteps = [];
+  late AuthService auth;
+
   Future doStep(int step, {Object? arguments}) async {
-    await Navigator.pushNamed(
+    dynamic stepCompleted = await Navigator.pushNamed(
       context,
       [
         Routes.flashCardsStep1,
@@ -33,22 +38,42 @@ class _FlashCardsState extends State<FlashCards> {
         Routes.flashCardsStep4,
       ][step - 1],
       arguments: arguments ?? widget.selectedPack,
-    ).then((value) async {
-      if (value == true) {
-        Get.snackbar(
-          'Congratulations!',
-          'Step $step Completed',
-          snackPosition: SnackPosition.BOTTOM,
-        );
-        if (!_completedSteps.contains(step)) {
-          setState(() => _completedSteps.add(step));
-        }
+    );
+    if (stepCompleted == true) {
+      Get.snackbar(
+        'Congratulations!',
+        'Step $step Completed',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      if (!_completedSteps.contains(step)) {
+        setState(() => _completedSteps.add(step));
+        await updateUserProgress();
       }
-    });
+    }
   }
 
-  void replay() {
+  void replay() async {
     setState(() => _completedSteps.clear());
+    await updateUserProgress();
+  }
+
+  Future<void> updateUserProgress() async {
+    List<UserProgress> progress = await Api.trackWordPack(
+      widget.selectedPack.id,
+      steps: _completedSteps,
+    );
+    auth.updateUser(progress: progress, updateOnServer: false);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    auth = Get.find<AuthService>();
+    auth.user.value?.progress.forEach((progress) {
+      if (progress.id == widget.selectedPack.id) {
+        setState(() => _completedSteps.addAll(progress.completed));
+      }
+    });
   }
 
   @override

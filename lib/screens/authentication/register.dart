@@ -106,6 +106,7 @@ class _RegisterState extends State<Register> {
                       error = '';
                     });
                     if (formKey.currentState!.validate()) {
+                      buttonController.start();
                       String? response = await auth.register(
                         name: nameController.text,
                         email: emailController.text,
