@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
 // Backend
-// const String entitlementId = 'premium';
-
 class Routes {
   static const String createWordpack = '/create_wordpack';
   static const String flashCards = '/flash_cards';
+  static const String flashCardsCompleted = '/flash_cards/completed';
   static const String flashCardsStep1 = '/flash_cards/step_1';
   static const String flashCardsStep2 = '/flash_cards/step_2';
   static const String flashCardsStep3 = '/flash_cards/step_3';
@@ -30,6 +29,7 @@ class Urls {
 // Style
 class AppColors {
   static const Color blue = Color(0xFF1C7EAB);
+  static const Color green = Color(0xFF328435);
   static const Color grey = Color(0xFF9E9E9E); // shade500
   static const Color red = Color(0xFFA41623);
   static const Color lightBlue = Color(0xFF82C6E6);
@@ -44,6 +44,7 @@ class TextStyles {
   static const h2 = TextStyle(fontSize: 24, fontWeight: FontWeight.bold);
   static const h3 = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
   static const h4 = TextStyle(fontSize: 14, fontWeight: FontWeight.bold);
+  static const pLarge = TextStyle(fontSize: 18);
   static const pMedium = TextStyle(fontSize: 14);
   static const pSmall = TextStyle(fontSize: 12);
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:flash_minds/backend/models/wordpack.dart';
+import 'package:flash_minds/backend/services/app_state.dart';
 import 'package:flash_minds/utils/constants.dart';
 import 'package:flash_minds/widgets/components/text_icon_button.dart';
 
@@ -22,7 +23,7 @@ class FlashCards extends StatefulWidget {
 
 class _FlashCardsState extends State<FlashCards> {
   final List<int> _completedSteps = [];
-  Future doStep(int step) async {
+  Future doStep(int step, {Object? arguments}) async {
     await Navigator.pushNamed(
       context,
       [
@@ -31,7 +32,7 @@ class _FlashCardsState extends State<FlashCards> {
         Routes.flashCardsStep3,
         Routes.flashCardsStep4,
       ][step - 1],
-      arguments: widget.selectedPack,
+      arguments: arguments ?? widget.selectedPack,
     ).then((value) async {
       if (value == true) {
         Get.snackbar(
@@ -39,13 +40,20 @@ class _FlashCardsState extends State<FlashCards> {
           'Step $step Completed',
           snackPosition: SnackPosition.BOTTOM,
         );
-        setState(() => _completedSteps.add(step));
+        if (!_completedSteps.contains(step)) {
+          setState(() => _completedSteps.add(step));
+        }
       }
     });
   }
 
+  void replay() {
+    setState(() => _completedSteps.clear());
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool isCompleted = _completedSteps.length == 4;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flash cards', style: TextStyles.h1),
@@ -89,25 +97,40 @@ class _FlashCardsState extends State<FlashCards> {
                   'and guess the foreign language translation',
               color: const Color(0xFF942B3B),
               gradientColor: const Color(0xFFAB2836),
-              onTap: () => doStep(4),
+              onTap: () => doStep(
+                4,
+                arguments: {
+                  'replay': replay,
+                  'word_pack': widget.selectedPack,
+                },
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(right: 8, bottom: 18),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextIconButton(
-                    "Let's Begin",
-                    onPressed: () {
-                      if (!_completedSteps.contains(1)) {
-                        doStep(1);
-                      } else if (!_completedSteps.contains(2)) {
-                        doStep(2);
-                      } else if (!_completedSteps.contains(3)) {
-                        doStep(3);
-                      } else if (!_completedSteps.contains(4)) {
-                        doStep(4);
-                      }
+                  GetBuilder<AppStateService>(
+                    builder: (appState) {
+                      return TextIconButton(
+                        isCompleted ? 'Completed' : "Let's Begin",
+                        icon:
+                            isCompleted ? Icons.check : Icons.arrow_forward_ios,
+                        color: isCompleted
+                            ? appState.darkMode.value
+                                ? AppColors.green
+                                : Colors.green
+                            : AppColors.red,
+                        onPressed: () {
+                          for (int i = 1; i <= 4; i++) {
+                            if (!_completedSteps.contains(i)) {
+                              doStep(i);
+                              return;
+                            }
+                          }
+                          Navigator.pop(context);
+                        },
+                      );
                     },
                   ),
                 ],

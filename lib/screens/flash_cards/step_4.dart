@@ -14,10 +14,12 @@ class Step4 extends StatefulWidget {
     required this.selectedWordPack,
     required this.sourceLanguage,
     required this.targetLanguage,
+    required this.replay,
   });
   final WordPack selectedWordPack;
   final Language sourceLanguage;
   final Language targetLanguage;
+  final void Function() replay;
 
   @override
   State<Step4> createState() => _Step4State();
@@ -72,14 +74,24 @@ class _Step4State extends State<Step4> {
         answers[index] = answer;
       });
       if (correct + incorrect == widget.selectedWordPack.words.length) {
-        Future.delayed(const Duration(seconds: 1), () {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (_) =>
-                  _ResultScreen(correct: correct, incorrect: incorrect),
-            ),
-          );
-        });
+        Future.delayed(
+          const Duration(seconds: 1),
+          () => Navigator.of(context).popAndPushNamed(
+            Routes.flashCardsCompleted,
+            result: true,
+            arguments: {
+              'correct': correct,
+              'incorrect': incorrect,
+              'word_pack_id': widget.selectedWordPack.id,
+            },
+          ).then(
+            (value) {
+              if (value == true) {
+                widget.replay();
+              }
+            },
+          ),
+        );
       }
     }
 
@@ -130,37 +142,6 @@ class _Step4State extends State<Step4> {
       spaceAfterBottomWidget: false,
       requiresCompletion: true,
       onPageChanged: (int i) => setState(() => index = i),
-    );
-  }
-}
-
-class _ResultScreen extends StatelessWidget {
-  const _ResultScreen({required this.correct, required this.incorrect});
-
-  final int correct, incorrect;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Row(
-            children: [
-              SizedBox(height: 24),
-            ],
-          ),
-          Text('Attempted: ${correct + incorrect}', style: TextStyles.h2),
-          Text('Correct: $correct', style: TextStyles.h1),
-          Text('Incorrect: $incorrect', style: TextStyles.h2),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Go back'),
-          ),
-          const SizedBox(height: 24),
-        ],
-      ),
     );
   }
 }

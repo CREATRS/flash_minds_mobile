@@ -16,10 +16,7 @@ dependencies:
   get: ^4.6.6
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  # lottie: ^2.7.0
-  # purchases_flutter: ^6.5.1
   rounded_loading_button: ^2.1.0
-  # sign_in_with_apple: ^5.0.0
   url_launcher: ^6.2.2
 
 dev_dependencies:
@@ -31,9 +28,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    # - assets/animations/
     - assets/flags/
     - assets/images/
+    - assets/images/game/
     - assets/wordpacks/
 
 import_sorter:

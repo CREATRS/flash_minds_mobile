@@ -125,6 +125,14 @@ class Api {
       data.map((wordpack) => WordPack.fromJson(wordpack)),
     );
   }
+
+  static Future<bool> rateWordPack(int id, {required int rating}) async {
+    Response response = await dio.post(
+      'word_pack/$id/rate/',
+      data: {'rating': rating},
+    );
+    return response.statusCode == 200;
+  }
 }
 
 Future<bool> _hasInternet() async {
