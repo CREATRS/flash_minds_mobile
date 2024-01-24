@@ -82,19 +82,22 @@ class Api {
       await _crudWordPack(_Method.delete, id: id);
 
   static Future<List<WordPack>> getWordPacks({bool me = false}) async {
-    List<Map<String, dynamic>> data = me ? [] : StaticData.wordPacks.data!;
+    List<Map<String, dynamic>> data =
+        me ? [] : List.from(StaticData.wordPacks.data!);
     Box box = Hive.box(StorageKeys.box);
     bool fetched = false;
 
     if (await _hasInternet()) {
       try {
-        Response webResponse = await dio.get('word_pack');
+        Response webResponse = await dio.get('word_pack/?me=$me');
         if (webResponse.statusCode != 200) throw Exception();
 
         List<Map<String, dynamic>> wr =
             List<Map<String, dynamic>>.from(webResponse.data);
         data = wr + data;
-        box.put(StorageKeys.wordPacks, jsonEncode(wr));
+        if (!me) {
+          box.put(StorageKeys.wordPacks, jsonEncode(wr));
+        }
         fetched = true;
       } on DioException catch (_) {
         fetched = false;
@@ -109,6 +112,22 @@ class Api {
       }
     }
 
+    return List<WordPack>.from(
+      data.map((wordpack) => WordPack.fromJson(wordpack)),
+    );
+  }
+
+  static Future<List<WordPack>> getWordPacksById(List<int> ids) async {
+    List<Map<String, dynamic>> data = List.from(StaticData.wordPacks.data!);
+    data.retainWhere((w) => ids.contains(w['id']));
+
+    Response webResponse = await dio.get('word_pack/?ids=${ids.join(",")}');
+    if (webResponse.statusCode != 200) throw Exception();
+
+    List<Map<String, dynamic>> wr =
+        List<Map<String, dynamic>>.from(webResponse.data);
+    data = wr + data;
+    data.sort((a, b) => ids.indexOf(a['id']));
     return List<WordPack>.from(
       data.map((wordpack) => WordPack.fromJson(wordpack)),
     );

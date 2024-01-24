@@ -46,7 +46,9 @@ class User {
       'target_language': targetLanguage?.code,
       'avatar': avatar,
       'token': token,
-      'progress': progress.map((progress) => progress.toJson()).toList(),
+      'progress': {
+        'values': progress.map((progress) => progress.toJson()).toList(),
+      },
     };
   }
 
@@ -84,7 +86,7 @@ class UserProgress {
     required this.completed,
   });
 
-  factory UserProgress.fromJson(Map<String, dynamic> json) => UserProgress(
+  factory UserProgress.fromJson(Map json) => UserProgress(
         id: int.parse(json['word_pack_id']),
         completed: List<int>.from(json['completed_steps']),
       );
@@ -92,5 +94,6 @@ class UserProgress {
   final int id;
   final List<int> completed;
 
-  Map<String, dynamic> toJson() => {'id': id, 'completed': completed};
+  Map<String, dynamic> toJson() =>
+      {'word_pack_id': id.toString(), 'completed_steps': completed};
 }
