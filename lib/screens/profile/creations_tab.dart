@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:flash_minds/backend/models/wordpack.dart';
 import 'package:flash_minds/screens/profile/word_pack_form.dart';
 import 'package:flash_minds/utils/constants.dart';
-import 'package:flash_minds/widgets/components/cached_or_asset_image.dart';
+import 'package:flash_minds/widgets/components/word_pack_list_tile.dart';
 
 class CreationsTab extends StatelessWidget {
   const CreationsTab(this.myWordPacks, {super.key, required this.refresh});
@@ -34,41 +34,10 @@ class CreationsTab extends StatelessWidget {
               ),
             )
           : ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.only(bottom: 24),
               itemCount: myWordPacks.length,
               itemBuilder: (context, index) {
-                WordPack wordPack = myWordPacks[index];
-                return ListTile(
-                  leading: CachedOrAssetImage(wordPack.image),
-                  title: Text(wordPack.name, style: TextStyles.h4),
-                  subtitle: Text('${wordPack.words.length} words'),
-                  onTap: () => onTap(wordPack),
-                  trailing: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            wordPack.rating.toString(),
-                            style: TextStyles.pMedium,
-                          ),
-                          const SizedBox(width: 4),
-                          Icon(
-                            wordPack.rating > 4
-                                ? Icons.star
-                                : wordPack.rating > 2
-                                    ? Icons.star_half
-                                    : Icons.star_border,
-                            size: 20,
-                            color: Colors.amber,
-                          ),
-                        ],
-                      ),
-                      Text('${(wordPack.rating * 10).toInt()} reviews'),
-                    ],
-                  ),
-                );
+                return WordPackListTile(myWordPacks[index], onTap: onTap);
               },
             ),
       floatingActionButton: FloatingActionButton(
