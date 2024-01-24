@@ -149,7 +149,15 @@ class _FlashCardsState extends State<FlashCards> {
                         onPressed: () {
                           for (int i = 1; i <= 4; i++) {
                             if (!_completedSteps.contains(i)) {
-                              doStep(i);
+                              doStep(
+                                i,
+                                arguments: i == 4
+                                    ? {
+                                        'replay': replay,
+                                        'word_pack': widget.selectedPack,
+                                      }
+                                    : null,
+                              );
                               return;
                             }
                           }
