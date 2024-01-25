@@ -62,7 +62,7 @@ class _FlashCardsState extends State<FlashCards> {
       widget.selectedPack.id,
       steps: _completedSteps,
     );
-    auth.updateUser(progress: progress, updateOnServer: false);
+    await auth.updateUser(progress: progress, updateOnServer: false);
   }
 
   @override
@@ -137,32 +137,45 @@ class _FlashCardsState extends State<FlashCards> {
                 children: [
                   GetBuilder<AppStateService>(
                     builder: (appState) {
-                      return TextIconButton(
-                        isCompleted ? 'Completed' : "Let's Begin",
-                        icon:
-                            isCompleted ? Icons.check : Icons.arrow_forward_ios,
-                        color: isCompleted
-                            ? appState.darkMode.value
-                                ? AppColors.green
-                                : Colors.green
-                            : AppColors.red,
-                        onPressed: () {
-                          for (int i = 1; i <= 4; i++) {
-                            if (!_completedSteps.contains(i)) {
-                              doStep(
-                                i,
-                                arguments: i == 4
-                                    ? {
-                                        'replay': replay,
-                                        'word_pack': widget.selectedPack,
-                                      }
-                                    : null,
-                              );
-                              return;
-                            }
-                          }
-                          Navigator.pop(context);
-                        },
+                      return Row(
+                        children: [
+                          TextIconButton(
+                            isCompleted ? 'Completed' : "Let's Begin",
+                            icon: isCompleted
+                                ? Icons.check
+                                : Icons.arrow_forward_ios,
+                            color: isCompleted
+                                ? appState.darkMode.value
+                                    ? AppColors.green
+                                    : Colors.green
+                                : AppColors.red,
+                            onPressed: () {
+                              for (int i = 1; i <= 4; i++) {
+                                if (!_completedSteps.contains(i)) {
+                                  doStep(
+                                    i,
+                                    arguments: i == 4
+                                        ? {
+                                            'replay': replay,
+                                            'word_pack': widget.selectedPack,
+                                          }
+                                        : null,
+                                  );
+                                  return;
+                                }
+                              }
+                              Navigator.pop(context);
+                            },
+                          ),
+                          if (isCompleted)
+                            IconButton(
+                              color: appState.darkMode.value
+                                  ? AppColors.green
+                                  : Colors.green,
+                              icon: const Icon(Icons.replay),
+                              onPressed: () => replay(),
+                            ),
+                        ],
                       );
                     },
                   ),

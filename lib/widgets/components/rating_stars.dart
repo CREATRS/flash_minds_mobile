@@ -21,6 +21,7 @@ class _RatingStarsState extends State<RatingStars> {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         5,
         (index) => IconButton(

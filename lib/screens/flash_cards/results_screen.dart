@@ -96,17 +96,12 @@ class RateDialog extends StatelessWidget {
 
     return AlertDialog(
       title: const Text('Rate word pack'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          RatingStars(
-            startFrom: rating,
-            onPressed: (i) {
-              rating = i;
-              controller.reset();
-            },
-          ),
-        ],
+      content: RatingStars(
+        startFrom: rating,
+        onPressed: (i) {
+          rating = i;
+          controller.reset();
+        },
       ),
       actions: [
         Column(

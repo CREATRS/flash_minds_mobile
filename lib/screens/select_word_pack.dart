@@ -122,9 +122,7 @@ class _SelectWordpackState extends State<SelectWordpack> {
             context,
             Routes.flashCards,
             arguments: selectedWordpack,
-          ).then((p) {
-            controller.reset();
-          });
+          ).then((_) => controller.reset());
         },
         text: 'Play',
       ),
