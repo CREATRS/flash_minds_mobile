@@ -6,6 +6,7 @@ import 'package:hive/hive.dart';
 
 import 'package:flash_minds/backend/data/word_packs.dart';
 import 'package:flash_minds/backend/models/object_response.dart';
+import 'package:flash_minds/backend/models/review.dart';
 import 'package:flash_minds/backend/models/user.dart';
 import 'package:flash_minds/backend/models/word.dart';
 import 'package:flash_minds/backend/models/wordpack.dart';
@@ -148,6 +149,11 @@ class Api {
       );
 
   // Other
+  static Future<Review?> getPreviousReview(int wordPackId) async {
+    Response response = await dio.get('word_pack/$wordPackId/rate/');
+    return response.statusCode == 200 ? Review.fromJson(response.data) : null;
+  }
+
   static Future<bool> rateWordPack(int id, {required int rating}) async {
     Response response = await dio.post(
       'word_pack/$id/rate/',

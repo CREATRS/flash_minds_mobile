@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import 'package:flash_minds/backend/models/review.dart';
 import 'package:flash_minds/backend/services/api.dart';
 import 'package:flash_minds/utils/constants.dart';
 import 'package:flash_minds/widgets/animated/trophy.dart';
@@ -94,50 +95,65 @@ class RateDialog extends StatelessWidget {
     RoundedLoadingButtonController controller =
         RoundedLoadingButtonController();
 
-    return AlertDialog(
-      title: const Text('Rate word pack'),
-      content: RatingStars(
-        startFrom: rating,
-        onPressed: (i) {
-          rating = i;
-          controller.reset();
-        },
-      ),
-      actions: [
-        Column(
-          children: [
-            Button(
-              text: 'Submit',
-              controller: controller,
-              onPressed: () async {
-                controller.start();
-                bool success =
-                    await Api.rateWordPack(wordPackId, rating: rating);
-                if (success) {
-                  controller.success();
-                  Get.back();
-                  Get.snackbar(
-                    'Thank you!',
-                    'Your rating has been submitted',
-                    snackPosition: SnackPosition.BOTTOM,
-                  );
-                } else {
-                  controller.error();
-                  Get.snackbar(
-                    'Error!',
-                    'Something went wrong',
-                    snackPosition: SnackPosition.BOTTOM,
-                  );
-                }
-              },
-            ),
-            TextButton(
-              child: const Text('Maybe later'),
-              onPressed: () => Navigator.pop(context),
+    return FutureBuilder(
+      future: Api.getPreviousReview(wordPackId),
+      builder: (context, AsyncSnapshot<Review?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return AlertDialog(
+          title: const Text('Rate word pack'),
+          content: RatingStars(
+            startFrom: snapshot.data?.value ?? rating,
+            onPressed: (i) {
+              rating = i;
+              controller.reset();
+            },
+          ),
+          actions: [
+            Column(
+              children: [
+                if (snapshot.data != null)
+                  Text(
+                    'Your latest rating was ${snapshot.data!.value} stars '
+                    'on ${snapshot.data!.date}\n'
+                    'This action will update your rating\n',
+                    textAlign: TextAlign.center,
+                  ),
+                Button(
+                  text: 'Submit',
+                  controller: controller,
+                  onPressed: () async {
+                    controller.start();
+                    bool success =
+                        await Api.rateWordPack(wordPackId, rating: rating);
+                    if (success) {
+                      controller.success();
+                      Get.back();
+                      Get.snackbar(
+                        'Thank you!',
+                        'Your rating has been submitted',
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
+                    } else {
+                      controller.error();
+                      Get.snackbar(
+                        'Error!',
+                        'Something went wrong',
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
+                    }
+                  },
+                ),
+                TextButton(
+                  child: const Text('Maybe later'),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }
