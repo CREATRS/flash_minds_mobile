@@ -90,7 +90,8 @@ class Api {
 
     if (await _hasInternet()) {
       try {
-        Response webResponse = await dio.get('word_pack/?me=$me');
+        String query = me ? '?me=true' : '';
+        Response webResponse = await dio.get('word_pack/?me=$query');
         if (webResponse.statusCode != 200) throw Exception();
 
         List<Map<String, dynamic>> wr =
