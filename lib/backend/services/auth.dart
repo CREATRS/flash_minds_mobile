@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart' show DioException;
 import 'package:get/get.dart';
 
 import 'package:flash_minds/backend/models/user.dart';
@@ -59,7 +60,11 @@ class AuthService extends GetxController {
   }
 
   Future<bool> logout() async {
-    await dio.post('auth/logout/');
+    try {
+      await dio.post('auth/logout/');
+    } on DioException catch (e) {
+      log('Error logging out: $e');
+    }
     dio.options.headers.remove('Authorization');
     user.value = null;
     await _appState.box.delete(StorageKeys.user);
