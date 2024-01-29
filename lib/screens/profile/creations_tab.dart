@@ -25,25 +25,32 @@ class CreationsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: myWordPacks.isEmpty
-          ? const Center(
-              child: Text(
-                'You have not created any wordpacks yet.',
-                style: TextStyles.pMedium,
+    return Stack(
+      // Scaffold reduces the tile touch area
+      alignment: Alignment.bottomRight,
+      children: [
+        myWordPacks.isEmpty
+            ? const Center(
+                child: Text(
+                  'You have not created any wordpacks yet.',
+                  style: TextStyles.pMedium,
+                ),
+              )
+            : ListView.builder(
+                padding: const EdgeInsets.only(bottom: 24),
+                itemCount: myWordPacks.length,
+                itemBuilder: (context, index) {
+                  return WordPackListTile(myWordPacks[index], onTap: onTap);
+                },
               ),
-            )
-          : ListView.builder(
-              padding: const EdgeInsets.only(bottom: 24),
-              itemCount: myWordPacks.length,
-              itemBuilder: (context, index) {
-                return WordPackListTile(myWordPacks[index], onTap: onTap);
-              },
-            ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => onTap(null),
-        child: const Icon(Icons.add),
-      ),
+        Padding(
+          padding: const EdgeInsets.all(24),
+          child: FloatingActionButton(
+            onPressed: () => onTap(null),
+            child: const Icon(Icons.add),
+          ),
+        ),
+      ],
     );
   }
 }
