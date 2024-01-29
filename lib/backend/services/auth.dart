@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:dio/dio.dart' show DioException;
-import 'package:get/get.dart';
+import 'package:dio/dio.dart' show DioException, Response;
+import 'package:get/get.dart' hide Response;
 
 import 'package:flash_minds/backend/models/user.dart';
 import 'package:flash_minds/backend/services/app_state.dart';
@@ -9,9 +9,9 @@ import 'package:flash_minds/utils/constants.dart';
 import 'api.dart';
 
 class AuthService extends GetxController {
-  AuthService(AppStateService appState) {
+  Future<void> init(AppStateService appState) async {
     _appState = appState;
-    _loadUser();
+    await _loadUser();
   }
 
   late AppStateService _appState;
@@ -19,12 +19,26 @@ class AuthService extends GetxController {
   String? purchasesUserId;
   RxBool entitlementIsActive = false.obs;
 
-  void _loadUser() {
+  Future<void> _loadUser() async {
     Map? userData = _appState.box.get(StorageKeys.user);
     if (userData != null) {
       try {
-        user.value = User.fromJson(Map<String, dynamic>.from(userData));
         dio.options.headers['Authorization'] = 'Token ${userData['token']}';
+        Response response = await dio.get('account/');
+        if (response.statusCode == 200) {
+          user.value = User.fromJson(
+            Map<String, dynamic>.from(
+              {
+                ...response.data,
+                'token': userData['token'],
+              },
+            ),
+          );
+          await _saveUser();
+        } else {
+          _appState.box.delete(StorageKeys.user);
+          userData = null;
+        }
         update();
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {

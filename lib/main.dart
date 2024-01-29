@@ -12,7 +12,9 @@ void main() async {
   AppStateService appState = AppStateService();
   await appState.init();
   Get.put(appState);
-  Get.put(AuthService(appState));
+  AuthService auth = AuthService();
+  await auth.init(appState);
+  Get.put(auth);
 
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
