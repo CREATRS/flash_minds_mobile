@@ -9,9 +9,9 @@ import 'package:flash_minds/backend/models/wordpack.dart';
 import 'package:flash_minds/backend/services/api.dart';
 import 'package:flash_minds/backend/services/auth.dart';
 import 'package:flash_minds/screens/profile/creations_tab.dart';
+import 'package:flash_minds/screens/profile/learning_tab.dart';
 import 'package:flash_minds/utils/constants.dart';
 import 'package:flash_minds/widgets/components/app_icon.dart';
-import 'package:flash_minds/widgets/components/cached_or_asset_image.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -43,7 +43,32 @@ class _ProfileState extends State<Profile> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
+              if (snapshot.hasError) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'There was an error trying to load your word packs.\n\n',
+                      style: TextStyles.pMedium,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => setState(() {}),
+                          child: const Text('Refresh'),
+                        ),
+                      ],
+                    ),
+                    TextButton(
+                      onPressed: () => Scaffold.of(context).openDrawer(),
+                      child: const Text('Go back'),
+                    ),
+                  ],
+                );
+              }
               List<WordPack> myWordPacks = snapshot.data as List<WordPack>;
+              List<UserProgress> myProgress = auth.user.value!.progress;
               return CustomScrollView(
                 slivers: [
                   SliverAppBar(
@@ -98,7 +123,7 @@ class _ProfileState extends State<Profile> {
                             Column(
                               children: [
                                 Text(
-                                  myWordPacks.length.toString(),
+                                  myProgress.length.toString(),
                                 ),
                                 const Text('Learning'),
                               ],
@@ -124,23 +149,7 @@ class _ProfileState extends State<Profile> {
                     child: TabBarView(
                       children: [
                         const Icon(Icons.person_outlined, size: 100),
-                        ListView.builder(
-                          itemCount: myWordPacks.length,
-                          itemBuilder: (context, index) {
-                            WordPack wordpack = myWordPacks[index];
-                            return ListTile(
-                              title: Text(wordpack.name),
-                              subtitle: Text(
-                                wordpack.words.map((e) => e).join(', '),
-                              ),
-                              leading: CachedOrAssetImage(wordpack.image),
-                              trailing: Text(
-                                wordpack.rating.toString(),
-                                style: TextStyles.pMedium,
-                              ),
-                            );
-                          },
-                        ),
+                        LearningTab(myProgress),
                         CreationsTab(
                           myWordPacks,
                           refresh: setState,

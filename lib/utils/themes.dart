@@ -39,6 +39,12 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
   ),
   primaryColor: AppColors.red,
   secondaryHeaderColor: AppColors.lightRed,
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      foregroundColor: Colors.white,
+      backgroundColor: AppColors.red,
+    ),
+  ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: AppColors.red,
     foregroundColor: Colors.white,
@@ -82,8 +88,14 @@ ThemeData lightTheme = ThemeData(
     ),
     border: OutlineInputBorder(borderRadius: _circular),
   ),
-  primaryColor: AppColors.lightRed, 
+  primaryColor: AppColors.lightRed,
   secondaryHeaderColor: AppColors.red,
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      foregroundColor: Colors.white,
+      backgroundColor: AppColors.lightRed,
+    ),
+  ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: AppColors.lightRed,
     foregroundColor: Colors.white,

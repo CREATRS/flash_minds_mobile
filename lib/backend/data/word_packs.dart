@@ -12,7 +12,14 @@ List<Map<String, dynamic>> _wordPacks = [
     'rating': 3.8,
     'asset': 'assets/wordpacks/animals.png',
     'words': [
-      {'es': 'león', 'fr': 'lion', 'de': 'löwe', 'it': 'leone', 'pt': 'leão'},
+      {
+        'en': 'lion',
+        'es': 'león',
+        'fr': 'lion',
+        'de': 'löwe',
+        'it': 'leone',
+        'pt': 'leão',
+      },
       {
         'en': 'elephant',
         'es': 'elefante',
@@ -229,14 +236,29 @@ List<Map<String, dynamic>> _wordPacks = [
     'rating': 3.4,
     'asset': 'assets/wordpacks/colors.png',
     'words': [
-      {'en': 'red', 'es': 'rojo', 'fr': 'rouge', 'de': 'rot', 'it': 'rosso'},
-      {'en': 'blue', 'es': 'azul', 'fr': 'bleu', 'de': 'blau', 'it': 'blu'},
+      {
+        'en': 'red',
+        'es': 'rojo',
+        'fr': 'rouge',
+        'de': 'rot',
+        'it': 'rosso',
+        'pt': 'vermelho',
+      },
+      {
+        'en': 'blue',
+        'es': 'azul',
+        'fr': 'bleu',
+        'de': 'blau',
+        'it': 'blu',
+        'pt': 'azul',
+      },
       {
         'en': 'green',
         'es': 'verde',
         'fr': 'vert',
         'de': 'grün',
         'it': 'verde',
+        'pt': 'verde',
       },
       {
         'en': 'yellow',
@@ -244,14 +266,23 @@ List<Map<String, dynamic>> _wordPacks = [
         'fr': 'jaune',
         'de': 'gelb',
         'it': 'giallo',
+        'pt': 'amarelo',
       },
-      {'en': 'pink', 'es': 'rosa', 'fr': 'rose', 'de': 'rosa', 'it': 'rosa'},
+      {
+        'en': 'pink',
+        'es': 'rosa',
+        'fr': 'rose',
+        'de': 'rosa',
+        'it': 'rosa',
+        'pt': 'rosa',
+      },
       {
         'en': 'orange',
         'es': 'naranja',
         'fr': 'orange',
         'de': 'orange',
         'it': 'arancione',
+        'pt': 'laranja',
       },
       {
         'en': 'purple',
@@ -259,6 +290,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'fr': 'violet',
         'de': 'lila',
         'it': 'viola',
+        'pt': 'roxo',
       },
       {
         'en': 'brown',
@@ -266,6 +298,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'fr': 'marron',
         'de': 'braun',
         'it': 'marrone',
+        'pt': 'marrom',
       },
       {
         'en': 'black',
@@ -273,6 +306,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'fr': 'noir',
         'de': 'schwarz',
         'it': 'nero',
+        'pt': 'preto',
       },
       {
         'en': 'white',
@@ -280,6 +314,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'fr': 'blanc',
         'de': 'weiß',
         'it': 'bianco',
+        'pt': 'branco',
       },
       {
         'en': 'gray',
@@ -287,22 +322,39 @@ List<Map<String, dynamic>> _wordPacks = [
         'fr': 'gris',
         'de': 'grau',
         'it': 'grigio',
+        'pt': 'cinza',
       },
       {
         'en': 'silver',
-        'es': 'plateado',
+        'es': 'plata',
         'fr': 'argent',
         'de': 'silber',
         'it': 'argento',
+        'pt': 'prata',
       },
-      {'en': 'gold', 'es': 'oro', 'fr': 'or', 'de': 'gold', 'it': 'oro'},
-      {'en': 'cyan', 'es': 'cian', 'fr': 'cyan', 'de': 'cyan', 'it': 'ciano'},
+      {
+        'en': 'gold',
+        'es': 'oro',
+        'fr': 'or',
+        'de': 'gold',
+        'it': 'oro',
+        'pt': 'ouro',
+      },
+      {
+        'en': 'cyan',
+        'es': 'cian',
+        'fr': 'cyan',
+        'de': 'cyan',
+        'it': 'ciano',
+        'pt': 'ciano',
+      },
       {
         'en': 'magenta',
         'es': 'magenta',
         'fr': 'magenta',
         'de': 'magenta',
         'it': 'magenta',
+        'pt': 'magenta',
       },
     ],
   },
@@ -333,6 +385,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'piña',
         'fr': 'ananas',
         'de': 'ananas',
+        'it': 'ananas',
         'pt': 'abacaxi',
       },
       {
@@ -340,6 +393,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'sandía',
         'fr': 'pastèque',
         'de': 'wassermelone',
+        'it': 'anguria',
         'pt': 'melancia',
       },
       {
@@ -347,6 +401,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'pomelo',
         'fr': 'pamplemousse',
         'de': 'pampelmuse',
+        'it': 'pompelmo',
         'pt': 'toranja',
       },
       {
@@ -354,6 +409,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'limón',
         'fr': 'citron',
         'de': 'zitrone',
+        'it': 'limone',
         'pt': 'limão',
       },
       {
@@ -361,6 +417,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'lima',
         'fr': 'citron vert',
         'de': 'limette',
+        'it': 'lime',
         'pt': 'lima',
       },
       {
@@ -368,6 +425,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'cereza',
         'fr': 'cerise',
         'de': 'kirsche',
+        'it': 'ciliegia',
         'pt': 'cereja',
       },
       {
@@ -375,6 +433,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'banano',
         'fr': 'banane',
         'de': 'banane',
+        'it': 'banana',
         'pt': 'banana',
       },
       {
@@ -382,6 +441,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'uva',
         'fr': 'raisin',
         'de': 'traube',
+        'it': 'uva',
         'pt': 'uva',
       },
       {
@@ -389,6 +449,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'fresa',
         'fr': 'fraise',
         'de': 'erdbeere',
+        'it': 'fragola',
         'pt': 'morango',
       },
       {
@@ -396,6 +457,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'naranja',
         'fr': 'orange',
         'de': 'orange',
+        'it': 'arancione',
         'pt': 'laranja',
       },
     ],
@@ -499,6 +561,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'Italia',
         'fr': 'Italie',
         'de': 'Italien',
+        'it': 'Italia',
         'pt': 'Itália',
       },
       {
@@ -506,6 +569,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'Francia',
         'fr': 'France',
         'de': 'Frankreich',
+        'it': 'Francia',
         'pt': 'França',
       },
       {
@@ -513,6 +577,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'Alemania',
         'fr': 'Allemagne',
         'de': 'Deutschland',
+        'it': 'Germania',
         'pt': 'Alemanha',
       },
       {
@@ -520,6 +585,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'España',
         'fr': 'Espagne',
         'de': 'Spanien',
+        'it': 'Spagna',
         'pt': 'Espanha',
       },
       {
@@ -527,6 +593,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'Inglaterra',
         'fr': 'Angleterre',
         'de': 'England',
+        'it': 'Inghilterra',
         'pt': 'Inglaterra',
       },
       {
@@ -534,6 +601,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'Estados Unidos',
         'fr': 'États-Unis',
         'de': 'Vereinigte Staaten',
+        'it': 'Stati Uniti',
         'pt': 'Estados Unidos',
       },
       {
@@ -541,6 +609,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'Brasil',
         'fr': 'Brésil',
         'de': 'Brasilien',
+        'it': 'Brasile',
         'pt': 'Brasil',
       },
       {
@@ -548,6 +617,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'Canadá',
         'fr': 'Canada',
         'de': 'Kanada',
+        'it': 'Canada',
         'pt': 'Canadá',
       },
       {
@@ -555,6 +625,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'Japón',
         'fr': 'Japon',
         'de': 'Japan',
+        'it': 'Giappone',
         'pt': 'Japão',
       },
       {
@@ -562,6 +633,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'China',
         'fr': 'Chine',
         'de': 'China',
+        'it': 'Cina',
         'pt': 'China',
       },
       {
@@ -569,6 +641,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'Rusia',
         'fr': 'Russie',
         'de': 'Russland',
+        'it': 'Russia',
         'pt': 'Rússia',
       },
       {
@@ -576,6 +649,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'India',
         'fr': 'Inde',
         'de': 'Indien',
+        'it': 'India',
         'pt': 'Índia',
       },
       {
@@ -583,6 +657,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'Australia',
         'fr': 'Australie',
         'de': 'Australien',
+        'it': 'Australia',
         'pt': 'Austrália',
       },
       {
@@ -590,6 +665,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'Sudáfrica',
         'fr': 'Afrique du Sud',
         'de': 'Südafrika',
+        'it': 'Sud Africa',
         'pt': 'África do Sul',
       },
       {
@@ -597,6 +673,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'México',
         'fr': 'Mexique',
         'de': 'Mexiko',
+        'it': 'Messico',
         'pt': 'México',
       },
       {
@@ -604,6 +681,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'Brasil',
         'fr': 'Brésil',
         'de': 'Brasilien',
+        'it': 'Brasile',
         'pt': 'Brasil',
       },
       {
@@ -611,6 +689,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'Argentina',
         'fr': 'Argentine',
         'de': 'Argentinien',
+        'it': 'Argentina',
         'pt': 'Argentina',
       },
       {
@@ -618,6 +697,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'Colombia',
         'fr': 'Colombie',
         'de': 'Kolumbien',
+        'it': 'Colombia',
         'pt': 'Colômbia',
       },
       {
@@ -625,6 +705,7 @@ List<Map<String, dynamic>> _wordPacks = [
         'es': 'República Dominicana',
         'fr': 'République dominicaine',
         'de': 'Dominikanische Republik',
+        'it': 'Repubblica Dominicana',
         'pt': 'República Dominicana',
       },
     ],

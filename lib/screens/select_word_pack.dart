@@ -6,6 +6,7 @@ import 'package:flash_minds/backend/models/game_progress.dart';
 import 'package:flash_minds/backend/models/wordpack.dart';
 import 'package:flash_minds/backend/services/api.dart';
 import 'package:flash_minds/backend/services/app_state.dart';
+import 'package:flash_minds/utils/constants.dart';
 import 'package:flash_minds/widgets/components/button.dart';
 import 'package:flash_minds/widgets/components/cached_or_asset_image.dart';
 import 'package:flash_minds/widgets/components/selectable_item.dart';
@@ -117,17 +118,11 @@ class _SelectWordpackState extends State<SelectWordpack> {
           await Future.delayed(const Duration(milliseconds: 300));
 
           if (!mounted) return;
-          // Navigator.pushNamed(
-          //   context,
-          //   Routes.game,
-          //   arguments: {
-          //     StorageKeys.wordPacks: selectedWordpack,
-          //     'progress': progress,
-          //   },
-          // ).then((p) {
-          //   controller.reset();
-          //   progress = p as GameProgress?;
-          // });
+          Navigator.pushNamed(
+            context,
+            Routes.flashCards,
+            arguments: selectedWordpack,
+          ).then((_) => controller.reset());
         },
         text: 'Play',
       ),

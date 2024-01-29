@@ -60,6 +60,7 @@ class _HomeState extends State<Home> {
                         () async =>
                             await Get.bottomSheet(const _SelectLanguages()),
                       );
+                  user = appstate.user.value!;
                 }
                 if (!user.hasLanguages) {
                   playController.error();
@@ -72,8 +73,6 @@ class _HomeState extends State<Home> {
                 playController.reset();
               },
             ),
-            const SizedBox(height: 12),
-            const Button(text: 'Profile', width: 250, onPressed: null),
             const Spacer(flex: 2),
           ],
         );

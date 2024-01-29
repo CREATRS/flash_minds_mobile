@@ -1,6 +1,7 @@
 import 'dart:developer';
 
-import 'package:get/get.dart';
+import 'package:dio/dio.dart' show DioException, Response;
+import 'package:get/get.dart' hide Response;
 
 import 'package:flash_minds/backend/models/user.dart';
 import 'package:flash_minds/backend/services/app_state.dart';
@@ -8,9 +9,9 @@ import 'package:flash_minds/utils/constants.dart';
 import 'api.dart';
 
 class AuthService extends GetxController {
-  AuthService(AppStateService appState) {
+  Future<void> init(AppStateService appState) async {
     _appState = appState;
-    _loadUser();
+    await _loadUser();
   }
 
   late AppStateService _appState;
@@ -18,12 +19,26 @@ class AuthService extends GetxController {
   String? purchasesUserId;
   RxBool entitlementIsActive = false.obs;
 
-  void _loadUser() {
+  Future<void> _loadUser() async {
     Map? userData = _appState.box.get(StorageKeys.user);
     if (userData != null) {
       try {
-        user.value = User.fromJson(Map<String, dynamic>.from(userData));
         dio.options.headers['Authorization'] = 'Token ${userData['token']}';
+        Response response = await dio.get('account/');
+        if (response.statusCode == 200) {
+          user.value = User.fromJson(
+            Map<String, dynamic>.from(
+              {
+                ...response.data,
+                'token': userData['token'],
+              },
+            ),
+          );
+          await _saveUser();
+        } else {
+          _appState.box.delete(StorageKeys.user);
+          userData = null;
+        }
         update();
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
@@ -59,7 +74,11 @@ class AuthService extends GetxController {
   }
 
   Future<bool> logout() async {
-    await dio.post('auth/logout/');
+    try {
+      await dio.post('auth/logout/');
+    } on DioException catch (e) {
+      log('Error logging out: $e');
+    }
     dio.options.headers.remove('Authorization');
     user.value = null;
     await _appState.box.delete(StorageKeys.user);
@@ -80,7 +99,7 @@ class AuthService extends GetxController {
       await _saveUser();
       return null;
     } else {
-      return response.data['error'];
+      return response.data['error'] ?? response.data['errors'][0]['message'];
     }
   }
 
@@ -90,6 +109,8 @@ class AuthService extends GetxController {
     String? avatar,
     String? sourceLanguage,
     String? targetLanguage,
+    List<UserProgress>? progress,
+    bool updateOnServer = true,
   }) async {
     var data = {
       'name': name,
@@ -97,11 +118,24 @@ class AuthService extends GetxController {
       'avatar': avatar,
       'source_language': sourceLanguage,
       'target_language': targetLanguage,
+      'progress': progress?.map((progress) => progress.toJson()).toList(),
     };
     data.removeWhere((_, value) => value == null);
-    var updatedUser = await dio.patch('account/${user.value!.id}/', data: data);
-    user.value =
-        User.fromJson({...updatedUser.data, 'token': user.value!.token});
+    if (updateOnServer) {
+      var updatedUser =
+          await dio.patch('account/${user.value!.id}/', data: data);
+      user.value =
+          User.fromJson({...updatedUser.data, 'token': user.value!.token});
+    } else {
+      user.value = user.value!.copyWith(
+        name: name,
+        email: email,
+        avatar: avatar,
+        sourceLanguage: sourceLanguage,
+        targetLanguage: targetLanguage,
+        progress: progress,
+      );
+    }
     await _saveUser();
     update();
   }
