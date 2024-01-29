@@ -33,7 +33,14 @@ class _SelectWordpackState extends State<SelectWordpack> {
     return Scaffold(
       key: _key,
       appBar: _appBar,
-      body: _body,
+      body: _WordPackList(
+        selectedWordpack: selectedWordpack,
+        onTap: (wordPack) {
+          setState(() {
+            selectedWordpack = wordPack;
+          });
+        },
+      ),
       endDrawer: _filterDrawer,
       bottomNavigationBar:
           selectedWordpack != null ? _bottomNavigationBar : null,
@@ -51,59 +58,6 @@ class _SelectWordpackState extends State<SelectWordpack> {
           onPressed: () => _key.currentState?.openEndDrawer(),
         ),
       ],
-    );
-  }
-
-  Widget get _body {
-    return FutureBuilder(
-      future: loaded ? null : Api.getWordPacks(),
-      builder: (context, AsyncSnapshot<List<WordPack>> snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        List<WordPack> wordPacks = snapshot.data as List<WordPack>;
-        loaded = true;
-        return ListView.builder(
-          itemCount: wordPacks.length,
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 80),
-          itemBuilder: (context, index) {
-            WordPack wordPack = wordPacks[index];
-            return SelectableItem(
-              text: wordPack.name,
-              subtitle: '${wordPack.words.length} words',
-              color: Theme.of(context).primaryColor,
-              leading: CachedOrAssetImage(wordPack.image),
-              middle: Flexible(
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  reverse: true,
-                  children: wordPack.languages
-                      .map((e) => Image.asset('assets/flags/$e.png', width: 24))
-                      .toList()
-                      .reversed
-                      .toList(),
-                ),
-              ),
-              trailing: Row(
-                children: List.generate(
-                  5,
-                  (index) => Icon(
-                    index + 1 <= wordPack.rating
-                        ? Icons.star_rounded
-                        : index + .5 < wordPack.rating
-                            ? Icons.star_half_rounded
-                            : Icons.star_border_rounded,
-                    color: Colors.amber,
-                    size: 16,
-                  ),
-                ),
-              ),
-              onTap: () => setState(() => selectedWordpack = wordPack),
-              selected: selectedWordpack?.id == wordPack.id,
-            );
-          },
-        );
-      },
     );
   }
 
@@ -234,5 +188,112 @@ class _SelectWordpackState extends State<SelectWordpack> {
         ],
       ),
     );
+  }
+}
+
+class _WordPackList extends StatefulWidget {
+  const _WordPackList({
+    required this.selectedWordpack,
+    required this.onTap,
+  });
+  final WordPack? selectedWordpack;
+  final Function(WordPack) onTap;
+
+  @override
+  State<_WordPackList> createState() => __WordPackListState();
+}
+
+class __WordPackListState extends State<_WordPackList> {
+  ScrollController scrollController = ScrollController();
+  List<WordPack>? wordPacks;
+  int currentPage = 0;
+  bool hasMore = true;
+  bool loading = false;
+
+  Future<void> loadWordPacks({int? page}) async {
+    if (loading) return;
+    setState(() {
+      loading = true;
+    });
+    List<WordPack> response = await Api.getWordPacks(page: page ?? 0);
+    hasMore = response.length == 10 && response.last.id > 0;
+    setState(() {
+      wordPacks ??= [];
+      wordPacks!.addAll(response);
+      currentPage++;
+      loading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadWordPacks();
+    scrollController.addListener(() {
+      if (hasMore &&
+          scrollController.position.pixels ==
+              scrollController.position.maxScrollExtent) {
+        loadWordPacks(page: currentPage);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return wordPacks == null
+        ? const Center(child: CircularProgressIndicator())
+        : Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  controller: scrollController,
+                  itemCount: wordPacks!.length,
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 80),
+                  itemBuilder: (context, index) {
+                    WordPack wordPack = wordPacks![index];
+                    return SelectableItem(
+                      text: wordPack.name,
+                      subtitle: '${wordPack.words.length} words',
+                      color: Theme.of(context).primaryColor,
+                      leading: CachedOrAssetImage(wordPack.image),
+                      middle: Flexible(
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          reverse: true,
+                          children: wordPack.languages
+                              .map(
+                                (e) => Image.asset(
+                                  'assets/flags/$e.png',
+                                  width: 24,
+                                ),
+                              )
+                              .toList()
+                              .reversed
+                              .toList(),
+                        ),
+                      ),
+                      trailing: Row(
+                        children: List.generate(
+                          5,
+                          (index) => Icon(
+                            index + 1 <= wordPack.rating
+                                ? Icons.star_rounded
+                                : index + .5 < wordPack.rating
+                                    ? Icons.star_half_rounded
+                                    : Icons.star_border_rounded,
+                            color: Colors.amber,
+                            size: 16,
+                          ),
+                        ),
+                      ),
+                      onTap: () => widget.onTap.call(wordPack),
+                      selected: widget.selectedWordpack?.id == wordPack.id,
+                    );
+                  },
+                ),
+              ),
+              if (loading) const LinearProgressIndicator(),
+            ],
+          );
   }
 }

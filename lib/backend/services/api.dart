@@ -82,7 +82,10 @@ class Api {
   static Future<ObjectResponse<WordPack>> deleteWordPack(int id) async =>
       await _crudWordPack(_Method.delete, id: id);
 
-  static Future<List<WordPack>> getWordPacks({bool me = false}) async {
+  static Future<List<WordPack>> getWordPacks({
+    bool me = false,
+    int page = 0,
+  }) async {
     List<Map<String, dynamic>> data =
         me ? [] : List.from(StaticData.wordPacks.data!);
     Box box = Hive.box(StorageKeys.box);
@@ -90,12 +93,18 @@ class Api {
 
     if (await _hasInternet()) {
       try {
-        String query = me ? '?me=true' : '';
+        String query = '?page=$page';
+        if (me) {
+          query += '&me=true';
+        }
         Response webResponse = await dio.get('word_pack/$query');
         if (webResponse.statusCode != 200) throw Exception();
 
         List<Map<String, dynamic>> wr =
-            List<Map<String, dynamic>>.from(webResponse.data);
+            List<Map<String, dynamic>>.from(webResponse.data['rows']);
+        if ((page + 1) * 10 < webResponse.data['count']) {
+          data.clear();
+        }
         data = wr + data;
         if (!me) {
           box.put(StorageKeys.wordPacks, jsonEncode(wr));
@@ -127,7 +136,7 @@ class Api {
     if (webResponse.statusCode != 200) throw Exception();
 
     List<Map<String, dynamic>> wr =
-        List<Map<String, dynamic>>.from(webResponse.data);
+        List<Map<String, dynamic>>.from(webResponse.data['rows']);
     data = wr + data;
     data.sort((a, b) => ids.indexOf(a['id']));
     return List<WordPack>.from(
