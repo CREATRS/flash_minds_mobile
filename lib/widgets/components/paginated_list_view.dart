@@ -68,7 +68,11 @@ class _PaginatedListViewState<T> extends State<PaginatedListView> {
                   },
                 ),
               ),
-              if (loading) const LinearProgressIndicator(),
+              if (loading)
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 24),
+                  child: LinearProgressIndicator(),
+                ),
             ],
           );
   }
