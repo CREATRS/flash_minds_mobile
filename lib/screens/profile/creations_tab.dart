@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:flash_minds/backend/models/wordpack.dart';
+import 'package:flash_minds/backend/services/api.dart';
 import 'package:flash_minds/screens/profile/word_pack_form.dart';
 import 'package:flash_minds/utils/constants.dart';
+import 'package:flash_minds/widgets/components/paginated_list_view.dart';
 import 'package:flash_minds/widgets/components/word_pack_list_tile.dart';
 
 class CreationsTab extends StatelessWidget {
@@ -36,12 +38,11 @@ class CreationsTab extends StatelessWidget {
                   style: TextStyles.pMedium,
                 ),
               )
-            : ListView.builder(
-                padding: const EdgeInsets.only(bottom: 24),
-                itemCount: myWordPacks.length,
-                itemBuilder: (context, index) {
-                  return WordPackListTile(myWordPacks[index], onTap: onTap);
-                },
+            : PaginatedListView<WordPack>(
+                future: ({int? page}) async =>
+                    await Api.getWordPacks(me: true, page: page ?? 0),
+                itemBuilder: (dynamic wordPack) =>
+                    WordPackListTile(wordPack, onTap: onTap),
               ),
         Padding(
           padding: const EdgeInsets.all(24),
