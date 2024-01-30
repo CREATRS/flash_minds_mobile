@@ -32,7 +32,7 @@ class _ProfileState extends State<Profile> {
             ? Image.network(user.avatar!, fit: BoxFit.fitWidth)
             : const AppIcon(height: 200);
         return DefaultTabController(
-          length: 3,
+          length: 2,
           child: FutureBuilder(
             future: Api.getProfile(),
             builder: (context, snapshot) {
@@ -113,7 +113,6 @@ class _ProfileState extends State<Profile> {
                       (BuildContext context, int index) {
                         return TabBar(
                           tabs: [
-                            const Text('Account'),
                             Column(
                               children: [
                                 Text(
@@ -142,7 +141,6 @@ class _ProfileState extends State<Profile> {
                   SliverFillRemaining(
                     child: TabBarView(
                       children: [
-                        const Icon(Icons.person_outlined, size: 100),
                         LearningTab(auth.user.value!.progress),
                         CreationsTab(refresh: setState),
                       ],
