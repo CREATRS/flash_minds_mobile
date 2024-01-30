@@ -204,56 +204,48 @@ class _WordPackList extends StatefulWidget {
 class __WordPackListState extends State<_WordPackList> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: PaginatedListView<WordPack>(
-            future: Api.getWordPacks,
-            validation: (List data) {
-              data = data as List<WordPack>;
-              return data.last.id > 0;
-            },
-            itemBuilder: (dynamic wordPack) {
-              wordPack = wordPack as WordPack;
-              return SelectableItem(
-                text: wordPack.name,
-                subtitle: '${wordPack.words.length} words',
-                color: Theme.of(context).primaryColor,
-                leading: CachedOrAssetImage(wordPack.image),
-                middle: Flexible(
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    reverse: true,
-                    children: wordPack.languages
-                        .map(
-                          (e) => Image.asset('assets/flags/$e.png', width: 24),
-                        )
-                        .toList()
-                        .reversed
-                        .toList(),
-                  ),
-                ),
-                trailing: Row(
-                  children: List.generate(
-                    5,
-                    (index) => Icon(
-                      index + 1 <= wordPack.rating
-                          ? Icons.star_rounded
-                          : index + .5 < wordPack.rating
-                              ? Icons.star_half_rounded
-                              : Icons.star_border_rounded,
-                      color: Colors.amber,
-                      size: 16,
-                    ),
-                  ),
-                ),
-                onTap: () => widget.onTap.call(wordPack),
-                selected: widget.selectedWordpack?.id == wordPack.id,
-              );
-            },
+    return PaginatedListView<WordPack>(
+      future: Api.getWordPacks,
+      validation: (List data) {
+        data = data as List<WordPack>;
+        return data.last.id > 0;
+      },
+      itemBuilder: (dynamic wordPack) {
+        wordPack = wordPack as WordPack;
+        return SelectableItem(
+          text: wordPack.name,
+          subtitle: '${wordPack.words.length} words',
+          color: Theme.of(context).primaryColor,
+          leading: CachedOrAssetImage(wordPack.image),
+          middle: Flexible(
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              reverse: true,
+              children: wordPack.languages
+                  .map((e) => Image.asset('assets/flags/$e.png', width: 24))
+                  .toList()
+                  .reversed
+                  .toList(),
+            ),
           ),
-        ),
-      ],
+          trailing: Row(
+            children: List.generate(
+              5,
+              (index) => Icon(
+                index + 1 <= wordPack.rating
+                    ? Icons.star_rounded
+                    : index + .5 < wordPack.rating
+                        ? Icons.star_half_rounded
+                        : Icons.star_border_rounded,
+                color: Colors.amber,
+                size: 16,
+              ),
+            ),
+          ),
+          onTap: () => widget.onTap.call(wordPack),
+          selected: widget.selectedWordpack?.id == wordPack.id,
+        );
+      },
     );
   }
 }
