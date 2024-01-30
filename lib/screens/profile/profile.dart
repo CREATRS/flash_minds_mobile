@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:flash_minds/backend/models/user.dart';
-import 'package:flash_minds/backend/models/wordpack.dart';
 import 'package:flash_minds/backend/services/api.dart';
 import 'package:flash_minds/backend/services/auth.dart';
 import 'package:flash_minds/screens/profile/creations_tab.dart';
@@ -21,9 +20,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  Future<List<WordPack>> getWordPacks() async =>
-      await Api.getWordPacks(me: true);
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AuthService>(
@@ -38,7 +34,7 @@ class _ProfileState extends State<Profile> {
         return DefaultTabController(
           length: 3,
           child: FutureBuilder(
-            future: getWordPacks(),
+            future: Api.getProfile(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -67,8 +63,6 @@ class _ProfileState extends State<Profile> {
                   ],
                 );
               }
-              List<WordPack> myWordPacks = snapshot.data as List<WordPack>;
-              List<UserProgress> myProgress = auth.user.value!.progress;
               return CustomScrollView(
                 slivers: [
                   SliverAppBar(
@@ -123,7 +117,7 @@ class _ProfileState extends State<Profile> {
                             Column(
                               children: [
                                 Text(
-                                  myProgress.length.toString(),
+                                  snapshot.data!.progress.length.toString(),
                                 ),
                                 const Text('Learning'),
                               ],
@@ -131,7 +125,7 @@ class _ProfileState extends State<Profile> {
                             Column(
                               children: [
                                 Text(
-                                  myWordPacks.length.toString(),
+                                  snapshot.data!.wordPacksCount.toString(),
                                 ),
                                 const Text('Creations'),
                               ],
@@ -149,11 +143,8 @@ class _ProfileState extends State<Profile> {
                     child: TabBarView(
                       children: [
                         const Icon(Icons.person_outlined, size: 100),
-                        LearningTab(myProgress),
-                        CreationsTab(
-                          myWordPacks,
-                          refresh: setState,
-                        ),
+                        LearningTab(auth.user.value!.progress),
+                        CreationsTab(refresh: setState),
                       ],
                     ),
                   ),

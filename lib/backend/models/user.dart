@@ -10,6 +10,7 @@ class User {
     this.avatar,
     this.token,
     this.progress = const [],
+    this.wordPacksCount,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -25,6 +26,7 @@ class User {
         json['progress']['values']
             .map((progress) => UserProgress.fromJson(progress)),
       ),
+      wordPacksCount: json['word_packs_count'],
     );
   }
 
@@ -36,6 +38,7 @@ class User {
   final String? avatar;
   final String? token;
   final List<UserProgress> progress;
+  final int? wordPacksCount;
 
   Map<String, dynamic> toJson() {
     return {
@@ -49,6 +52,7 @@ class User {
       'progress': {
         'values': progress.map((progress) => progress.toJson()).toList(),
       },
+      'word_packs_count': wordPacksCount,
     };
   }
 
@@ -60,6 +64,7 @@ class User {
     String? avatar,
     String? token,
     List<UserProgress>? progress,
+    int? wordPacksCount,
   }) {
     return User(
       id: id,
@@ -74,6 +79,7 @@ class User {
       avatar: avatar ?? this.avatar,
       token: token ?? this.token,
       progress: progress ?? this.progress,
+      wordPacksCount: wordPacksCount ?? this.wordPacksCount,
     );
   }
 

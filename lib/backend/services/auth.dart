@@ -28,10 +28,7 @@ class AuthService extends GetxController {
         if (response.statusCode == 200) {
           user.value = User.fromJson(
             Map<String, dynamic>.from(
-              {
-                ...response.data,
-                'token': userData['token'],
-              },
+              {...response.data, 'token': userData['token']},
             ),
           );
           await _saveUser();

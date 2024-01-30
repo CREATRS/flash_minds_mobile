@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 
+import 'package:flash_minds/utils/constants.dart';
+
 class PaginatedListView<T> extends StatefulWidget {
   const PaginatedListView({
     super.key,
     required this.itemBuilder,
     required this.future,
     this.validation,
+    this.onEmpty = 'No items found.',
   });
   final Widget Function(T) itemBuilder;
   final Future<List<T>> Function({int page}) future;
   final bool Function(List<T>)? validation;
+  final String onEmpty;
 
   @override
   State<PaginatedListView> createState() => _PaginatedListViewState();
@@ -53,27 +57,26 @@ class _PaginatedListViewState<T> extends State<PaginatedListView> {
 
   @override
   Widget build(BuildContext context) {
-    return data == null
-        ? const Center(child: CircularProgressIndicator())
-        : Column(
-            children: [
-              Flexible(
-                child: ListView.builder(
-                  controller: scrollController,
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 80),
-                  itemCount: data!.length,
-                  itemBuilder: (context, index) {
-                    T item = data![index];
-                    return widget.itemBuilder(item);
-                  },
-                ),
-              ),
-              if (loading)
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 24),
-                  child: LinearProgressIndicator(),
-                ),
-            ],
-          );
+    if (data == null) return const Center(child: CircularProgressIndicator());
+    if (data!.isEmpty) {
+      return Center(child: Text(widget.onEmpty, style: TextStyles.pMedium));
+    }
+    return Column(
+      children: [
+        Flexible(
+          child: ListView.builder(
+            controller: scrollController,
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 80),
+            itemCount: data!.length,
+            itemBuilder: (context, index) => widget.itemBuilder(data![index]),
+          ),
+        ),
+        if (loading)
+          const Padding(
+            padding: EdgeInsets.only(bottom: 24),
+            child: LinearProgressIndicator(),
+          ),
+      ],
+    );
   }
 }

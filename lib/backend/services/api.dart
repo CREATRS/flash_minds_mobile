@@ -164,6 +164,11 @@ class Api {
     return response.statusCode == 200 ? Review.fromJson(response.data) : null;
   }
 
+  static Future<User> getProfile() async {
+    Response response = await dio.get('account/?profile=true');
+    return User.fromJson(response.data);
+  }
+
   static Future<bool> rateWordPack(int id, {required int rating}) async {
     Response response = await dio.post(
       'word_pack/$id/rate/',
